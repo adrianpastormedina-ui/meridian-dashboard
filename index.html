@@ -46,16 +46,22 @@
         </div>
         
         <!-- Main Menu -->
-        <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-200">
+        <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-200">
             <a href="#hero" class="hover:text-[#D4AF37] transition-colors" data-i18n="navHome">Inicio</a>
             <a href="#about" class="hover:text-[#D4AF37] transition-colors" data-i18n="navAbout">Nosotros</a>
             <a href="#services" class="hover:text-[#D4AF37] transition-colors" data-i18n="navServices">Servicios</a>
             <a href="#value" class="hover:text-[#D4AF37] transition-colors" data-i18n="navMethod">Metodología</a>
+            <a href="#universities" class="hover:text-[#D4AF37] transition-colors" data-i18n="navUniversities">Universidades Top</a>
+            <button onclick="window.openLoginModal()" class="hover:text-[#D4AF37] transition-colors" data-i18n="navPortal">Plataforma Portal</button>
         </div>
 
         <div class="flex items-center gap-4">
-            <button onclick="window.toggleLanguage()" class="text-xs font-bold text-slate-300 hover:text-[#D4AF37] transition-colors" id="langLabel">EN</button>
-            <button id="navLoginBtn" onclick="window.openLoginModal()" class="px-5 py-2 bg-[#D4AF37] hover:bg-[#B5952F] text-[#0B132B] text-sm font-bold rounded-lg transition-all shadow-lg hover:shadow-[#D4AF37]/20" data-i18n="navLogin">Portal Login</button>
+            <!-- Pill Language Selector -->
+            <div class="flex bg-[#0C122C] rounded-full p-1 border border-white/10">
+                <button id="btnES" onclick="window.setLang('es')" class="px-3 py-1 rounded-full text-xs font-mono font-bold transition-all bg-[#D4AF37] text-[#0B132B] shadow-md">ES</button>
+                <button id="btnEN" onclick="window.setLang('en')" class="px-3 py-1 rounded-full text-xs font-mono font-bold transition-all text-slate-400 hover:text-white">EN</button>
+            </div>
+            <button id="navLoginBtn" onclick="window.openLoginModal()" class="px-5 py-2 bg-[#D4AF37] hover:bg-[#B5952F] text-[#0B132B] text-sm font-bold rounded-full transition-all shadow-lg hover:shadow-[#D4AF37]/20 flex items-center gap-2" data-i18n="navStart">Iniciar Camino →</button>
         </div>
     </nav>
 
@@ -553,6 +559,7 @@
         window.i18n = {
             en: {
                 navHome: "Home", navAbout: "About Us", navServices: "Services", navMethod: "Methodology",
+                navUniversities: "Top Universities", navPortal: "Portal Platform", navStart: "Start Journey →",
                 navLogin: "Portal Login", heroSubtitle: "Apex Zenith Consulting",
                 heroTitle1: "Thousands apply.", heroTitle2: "Few stand out.", heroTitle3: "We'll make sure you are one of them.",
                 heroDesc: "Transforming high-performing students into outstanding candidates for the world's top universities through IB excellence and standardized test mastery.",
@@ -575,6 +582,7 @@
             },
             es: {
                 navHome: "Inicio", navAbout: "Nosotros", navServices: "Servicios", navMethod: "Metodología",
+                navUniversities: "Universidades Top", navPortal: "Plataforma Portal", navStart: "Iniciar Camino →",
                 navLogin: "Acceder al Portal", heroSubtitle: "Consultoría Apex Zenith",
                 heroTitle1: "Miles aplican.", heroTitle2: "Pocos destacan.", heroTitle3: "Aseguraremos que seas uno de ellos.",
                 heroDesc: "Transformando a estudiantes de alto rendimiento en candidatos sobresalientes para las mejores universidades del mundo a través de la excelencia en el IB y exámenes estandarizados.",
@@ -597,11 +605,26 @@
             }
         };
 
-        window.currentLang = 'es'; // Changed default to ES
+        window.currentLang = 'es';
 
-        window.toggleLanguage = function() {
-            window.currentLang = window.currentLang === 'en' ? 'es' : 'en';
-            document.getElementById('langLabel').innerText = window.currentLang.toUpperCase();
+        window.setLang = function(lang) {
+            window.currentLang = lang;
+            // Update pill styles
+            const btnES = document.getElementById('btnES');
+            const btnEN = document.getElementById('btnEN');
+            if (btnES && btnEN) {
+                if (lang === 'es') {
+                    btnES.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold transition-all bg-[#D4AF37] text-[#0B132B] shadow-md';
+                    btnEN.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold transition-all text-slate-400 hover:text-white';
+                } else {
+                    btnEN.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold transition-all bg-[#D4AF37] text-[#0B132B] shadow-md';
+                    btnES.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold transition-all text-slate-400 hover:text-white';
+                }
+            }
+            window.applyTranslations();
+        }
+
+        window.applyTranslations = function() {
             
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -713,9 +736,8 @@
             }
         });
 
-        // Initialize language
-        window.toggleLanguage();
-        window.toggleLanguage(); // To force ES on load but set correct labels
+        // Initialize language to ES
+        window.setLang('es');
     </script>
 </body>
 </html>

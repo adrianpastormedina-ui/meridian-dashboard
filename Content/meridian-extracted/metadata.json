@@ -1,0 +1,6 @@
+{
+  "name": "Meridian Elite Consulting",
+  "description": "Plataforma premium con estilo limpio y minimalista, transiciones de alta gama, timelines de admisión, universidades top global, simuladores de Bachillerato Internacional (IB) y portal interactivo de asesorías.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

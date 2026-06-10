@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", sans-serif;
+  --font-serif: "Playfair Display", serif;
+  
+  --color-brand-dark: #070B19;
+  --color-brand-slate: #0C122C;
+  --color-brand-navy: #151F47;
+  --color-brand-gold: #E2B254;
+  --color-brand-gold-hover: #D59E39;
+  --color-brand-crimson: #AE2024;
+  --color-brand-crimson-hover: #8D171B;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: #070B19;
+    color: #F8FAFC;
+  }
+}
+
+/* Custom gorgeous scrollbar in dark premium theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #070B19;
+}
+::-webkit-scrollbar-thumb {
+  background: #151F47;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E2B254;
+}
+
+/* Glassmorphism utility for dark bold theme */
+.glass {
+  background: rgba(12, 18, 44, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-premium {
+  background: rgba(12, 18, 44, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 178, 84, 0.12);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+}
