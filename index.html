@@ -47,10 +47,10 @@
         
         <!-- Main Menu -->
         <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-200">
-            <a href="#hero" class="hover:text-[#D4AF37] transition-colors">Inicio</a>
-            <a href="#about" class="hover:text-[#D4AF37] transition-colors">Nosotros</a>
-            <a href="#services" class="hover:text-[#D4AF37] transition-colors">Servicios</a>
-            <a href="#value" class="hover:text-[#D4AF37] transition-colors">Metodología</a>
+            <a href="#hero" class="hover:text-[#D4AF37] transition-colors" data-i18n="navHome">Inicio</a>
+            <a href="#about" class="hover:text-[#D4AF37] transition-colors" data-i18n="navAbout">Nosotros</a>
+            <a href="#services" class="hover:text-[#D4AF37] transition-colors" data-i18n="navServices">Servicios</a>
+            <a href="#value" class="hover:text-[#D4AF37] transition-colors" data-i18n="navMethod">Metodología</a>
         </div>
 
         <div class="flex items-center gap-4">
@@ -552,6 +552,7 @@
         
         window.i18n = {
             en: {
+                navHome: "Home", navAbout: "About Us", navServices: "Services", navMethod: "Methodology",
                 navLogin: "Portal Login", heroSubtitle: "Apex Zenith Consulting",
                 heroTitle1: "Thousands apply.", heroTitle2: "Few stand out.", heroTitle3: "We'll make sure you are one of them.",
                 heroDesc: "Transforming high-performing students into outstanding candidates for the world's top universities through IB excellence and standardized test mastery.",
@@ -573,6 +574,7 @@
                 toastEmailUsed: "Email is already registered", toastWeakPass: "Password must be at least 6 characters"
             },
             es: {
+                navHome: "Inicio", navAbout: "Nosotros", navServices: "Servicios", navMethod: "Metodología",
                 navLogin: "Acceder al Portal", heroSubtitle: "Consultoría Apex Zenith",
                 heroTitle1: "Miles aplican.", heroTitle2: "Pocos destacan.", heroTitle3: "Aseguraremos que seas uno de ellos.",
                 heroDesc: "Transformando a estudiantes de alto rendimiento en candidatos sobresalientes para las mejores universidades del mundo a través de la excelencia en el IB y exámenes estandarizados.",
