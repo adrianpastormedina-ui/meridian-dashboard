@@ -30,7 +30,7 @@ export default function StatsSection({ language }: StatsSectionProps) {
       id: 'offers',
       value: t.stats_offers_count,
       label: t.stats_offers_desc,
-      sub: 'Enviados directamente desde nuestros asesorías',
+      sub: t.stats_offers_sent,
       icon: Award,
       color: 'from-[#AE2024] to-[#AE2023]'
     }
@@ -55,7 +55,7 @@ export default function StatsSection({ language }: StatsSectionProps) {
             {t.stats_title}
           </h2>
           <p className="text-slate-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            Resultados auditados. Tu admisión no es obra del azar; es la consecuencia de una arquitectura de perfil impecable.
+            {t.stats_audited_desc}
           </p>
         </div>
 
@@ -66,13 +66,13 @@ export default function StatsSection({ language }: StatsSectionProps) {
           <div className="lg:col-span-12 xl:col-span-5 flex flex-col justify-between space-y-6">
             <div className="p-6 sm:p-8 rounded-2xl bg-[#151F47]/20 border border-white/5 shadow-sm flex flex-col justify-center">
               <span className="text-xs font-sans font-bold text-[#E2B254] mb-3 uppercase tracking-wider">
-                EFICACIA COMPROBADA
+                {t.stats_proven_badge}
               </span>
               <h3 className="text-2xl sm:text-3xl font-sans font-black text-white mb-4">
-                El Efecto Avanzado de Meridian
+                {t.stats_effect_title}
               </h3>
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
-                Combinamos un currículum pedagógico de élite con el análisis estratégico de vacantes universitarias, garantizando que tu alumno compita al mismo nivel que los mejores postulantes globales.
+                {t.stats_effect_desc}
               </p>
               
               <div className="flex bg-[#070B19]/80 rounded-2xl p-4 border border-white/5 items-center space-x-4">
@@ -80,8 +80,8 @@ export default function StatsSection({ language }: StatsSectionProps) {
                   <Percent className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-white">Consistencia IB</div>
-                  <div className="text-xs text-slate-400">92% de alumnos obtienen 38+ en el Score total.</div>
+                  <div className="text-sm font-bold text-white">{t.stats_ib_label}</div>
+                  <div className="text-xs text-slate-400">{t.stats_ib_sub}</div>
                 </div>
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function StatsSection({ language }: StatsSectionProps) {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div>
                 <span className="text-xs font-sans font-bold text-[#E2B254] tracking-widest uppercase block mb-1">
-                  IVY LEAGUE & TOP 15 COMPARATIVO
+                  {t.stats_ivy_badge}
                 </span>
                 <h3 className="text-xl sm:text-2xl font-sans font-black text-white">
                   {t.stats_comparison}
@@ -195,7 +195,7 @@ export default function StatsSection({ language }: StatsSectionProps) {
                 {currentUni.description}
               </div>
               <div className="text-xs bg-[#AE2024]/10 border border-[#AE2024]/30 px-3 py-1.5 rounded-xl text-[#E2B254] font-extrabold shrink-0">
-                Offers: {currentUni.meridianOffers}
+                {t.stats_offers_label}: {currentUni.meridianOffers}
               </div>
             </div>
 

@@ -89,7 +89,7 @@ export default function AboutSection({ language }: AboutSectionProps) {
 
             <div className="mt-8 flex items-center space-x-2 text-xs font-mono tracking-widest text-[#E2B254] font-bold uppercase mb-1">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Transcribiendo Rigor Integral</span>
+              <span>{t.about_mission_badge}</span>
             </div>
           </motion.div>
 
@@ -123,7 +123,7 @@ export default function AboutSection({ language }: AboutSectionProps) {
 
             <div className="mt-8 flex items-center space-x-2 text-xs font-mono tracking-widest text-[#E2B254] font-bold uppercase mb-1">
               <Target className="h-3.5 w-3.5" />
-              <span>Formando Líderes del Futuro</span>
+              <span>{t.about_vision_badge}</span>
             </div>
           </motion.div>
 

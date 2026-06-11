@@ -171,7 +171,7 @@ export default function Hero({ language, onOpenPortal, onOpenAuth, isLoggedIn }:
                 7x
               </div>
               <span className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em] text-slate-400 mt-2 text-center font-bold">
-                Probabilidades Admisión
+                {t.hero_stat_1}
               </span>
             </div>
             <div className="flex flex-col items-center">
@@ -179,7 +179,7 @@ export default function Hero({ language, onOpenPortal, onOpenAuth, isLoggedIn }:
                 100%
               </div>
               <span className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em] text-slate-400 mt-2 text-center font-bold">
-                Tutores de Elite Internacional
+                {t.hero_stat_2}
               </span>
             </div>
             <div className="flex flex-col items-center">
@@ -187,7 +187,7 @@ export default function Hero({ language, onOpenPortal, onOpenAuth, isLoggedIn }:
                 1500+
               </div>
               <span className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em] text-slate-400 mt-2 text-center font-bold">
-                Puntaje Meta SAT
+                {t.hero_stat_3}
               </span>
             </div>
             <div className="flex flex-col items-center">
@@ -195,7 +195,7 @@ export default function Hero({ language, onOpenPortal, onOpenAuth, isLoggedIn }:
                 98%
               </div>
               <span className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.1em] text-slate-400 mt-2 text-center font-bold">
-                Grado A Ensayos IB EE
+                {t.hero_stat_4}
               </span>
             </div>
           </motion.div>

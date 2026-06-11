@@ -380,6 +380,24 @@ export const DICTIONARY = {
     key_exclusive_desc: 'En Meridian no aceptamos a cualquier estudiante. Aceptamos a aquellos apasionados por esforzarse y listos para llegar al máximo nivel. Si tienes el compromiso, nosotros te daremos todo el mapa de vuelo.',
     key_exclusive_btn: 'Inicia tu Camino',
 
+    about_mission_badge: 'Transcribiendo Rigor Integral',
+    about_vision_badge: 'Formando Líderes del Futuro',
+
+    stats_audited_desc: 'Resultados auditados. Tu admisión no es obra del azar; es la consecuencia de una arquitectura de perfil impecable.',
+    stats_proven_badge: 'EFICACIA COMPROBADA',
+    stats_effect_title: 'El Efecto Avanzado de Meridian',
+    stats_effect_desc: 'Combinamos un currículum pedagógico de élite con el análisis estratégico de vacantes universitarias, garantizando que tu alumno compita al mismo nivel que los mejores postulantes globales.',
+    stats_ib_label: 'Consistencia IB',
+    stats_ib_sub: '92% de alumnos obtienen 38+ en el Score total.',
+    stats_offers_sent: 'Enviados directamente desde nuestras asesorías',
+    stats_ivy_badge: 'IVY LEAGUE & TOP 15 COMPARATIVO',
+    stats_offers_label: 'Offers',
+
+    hero_stat_1: 'PROBABILIDADES ADMISIÓN',
+    hero_stat_2: 'TUTORES DE ÉLITE INTERNACIONAL',
+    hero_stat_3: 'PUNTAJE META SAT',
+    hero_stat_4: 'GRADO A ENSAYOS IB EE',
+
     portal_welcome: 'Bienvenido a la Plataforma Meridian',
     portal_student_tab: 'Vista Estudiante',
     portal_admin_tab: 'Administrador Tutor',
@@ -472,6 +490,24 @@ export const DICTIONARY = {
     key_exclusive_title: 'An Exclusive Commitment',
     key_exclusive_desc: 'At Meridian, we do not admit everyone. We selectively partner with students determined to apply maximum rigor to their goals. If you have the passion, we supply the complete flight manual.',
     key_exclusive_btn: 'Begin Your Journey',
+
+    about_mission_badge: 'Transcribing Integral Rigor',
+    about_vision_badge: 'Shaping Future Leaders',
+
+    stats_audited_desc: 'Audited results. Your admission is not a matter of chance; it is the result of an impeccable profile architecture.',
+    stats_proven_badge: 'PROVEN EFFICACY',
+    stats_effect_title: 'The Meridian Advanced Effect',
+    stats_effect_desc: 'We combine an elite pedagogical curriculum with strategic university vacancy analysis, ensuring your student competes at the same level as the best global applicants.',
+    stats_ib_label: 'IB Consistency',
+    stats_ib_sub: '92% of students score 38+ on the IB total.',
+    stats_offers_sent: 'Dispatched directly from our advisory sessions',
+    stats_ivy_badge: 'IVY LEAGUE & TOP 15 COMPARATIVE',
+    stats_offers_label: 'Offers',
+
+    hero_stat_1: 'ADMISSION PROBABILITIES',
+    hero_stat_2: 'ELITE INTERNATIONAL TUTORS',
+    hero_stat_3: 'SAT TARGET SCORE',
+    hero_stat_4: 'GRADE A IB EE ESSAYS',
 
     portal_welcome: 'Welcome to the Meridian Portal',
     portal_student_tab: 'Student Dashboard',
