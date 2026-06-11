@@ -233,6 +233,8 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
   const [satHours, setSatHours] = useState(10.0);
   const [uniHours, setUniHours] = useState(5.0);
 
+  const totalHoursLeft = ibHours + satHours + uniHours;
+
   // Dual-role simulation manager
   const [userRole, setUserRole] = useState<"student" | "tutor">("student");
 
