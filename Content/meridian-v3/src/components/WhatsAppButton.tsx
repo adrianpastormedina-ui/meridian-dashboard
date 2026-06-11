@@ -11,8 +11,8 @@ Me gustaría solicitar más información y una cotización.
 
 Estoy interesado/a en la siguiente opción (puedes borrar las que no te interesen):
 
-1. Tutorías Especializadas IB
-2. Prep SAT / Diagnósticos
+1. Tutorías Especializadas IB / Asesorías Internos y Monografía IB
+2. Prep SAT / Diagnósticos / TOEFL y DET
 3. Asesorías Universitarias Premium Meridian International
 
 ¡Quedo a la espera de su respuesta!`;
