@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from "react";
 import { auth } from "../firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Calendar as CalendarIcon,
@@ -535,7 +535,14 @@ export default function StudentPortal({ language }: StudentPortalProps) {
 
                 <button
                   type="button"
-                  onClick={() => alert("Simulando cierre de sesión seguro...")}
+                  onClick={async () => {
+                    try {
+                      await signOut(auth);
+                      window.location.href = '/';
+                    } catch (error) {
+                      console.error('Error signing out', error);
+                    }
+                  }}
                   className="w-full flex items-center gap-2 py-2.5 px-4 font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all text-xs cursor-pointer"
                 >
                   <LogOut className="h-4 w-4 text-slate-400" />
@@ -564,18 +571,53 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                         </p>
                       </div>
 
-                      <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4 shrink-0 hover:border-[#E2B254]/45 transition-all group">
-                        <div className="text-right">
-                          <span className="text-[10px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
-                            SALDO RESTANTE
-                          </span>
-                          <span className="text-2xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
-                            {totalHoursLeft.toFixed(1)}{" "}
-                            <span className="text-sm font-bold text-slate-500">Hrs</span>
-                          </span>
+                      <div className="flex flex-wrap gap-2 sm:gap-4 justify-end">
+                        {/* Counter 1: Tutorías IB */}
+                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
+                              Tutorías IB
+                            </span>
+                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
+                              {totalHoursLeft.toFixed(1)}{" "}
+                              <span className="text-xs font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
+                            <Clock className="h-4 w-4" />
+                          </div>
                         </div>
-                        <div className="p-2 bg-amber-50 rounded-xl text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
-                          <Clock className="h-6 w-6 animate-pulse" />
+
+                        {/* Counter 2: Prep SAT */}
+                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
+                              Prep SAT
+                            </span>
+                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
+                              0.0{" "}
+                              <span className="text-xs font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
+                            <Clock className="h-4 w-4" />
+                          </div>
+                        </div>
+
+                        {/* Counter 3: Asesorías Univ. */}
+                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
+                              Asesorías Univ.
+                            </span>
+                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
+                              0.0{" "}
+                              <span className="text-xs font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
+                            <Clock className="h-4 w-4" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -937,13 +979,53 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                         </p>
                       </div>
 
-                      <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4 shrink-0">
-                        <div className="text-right">
-                          <span className="text-[10px] text-slate-400 block pb-0.5">SALDO DISPONIBLE</span>
-                          <span className="text-2xl font-sans font-black text-slate-900">{totalHoursLeft.toFixed(1)} Hrs</span>
+                      <div className="flex flex-wrap gap-2 sm:gap-4 justify-end">
+                        {/* Counter 1: Tutorías IB */}
+                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
+                              Tutorías IB
+                            </span>
+                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
+                              {totalHoursLeft.toFixed(1)}{" "}
+                              <span className="text-xs font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
+                            <Clock className="h-4 w-4" />
+                          </div>
                         </div>
-                        <div className="p-2 bg-amber-50 rounded-xl text-[#E2B254]">
-                          <Clock className="h-6 w-6" />
+
+                        {/* Counter 2: Prep SAT */}
+                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
+                              Prep SAT
+                            </span>
+                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
+                              0.0{" "}
+                              <span className="text-xs font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
+                            <Clock className="h-4 w-4" />
+                          </div>
+                        </div>
+
+                        {/* Counter 3: Asesorías Univ. */}
+                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
+                              Asesorías Univ.
+                            </span>
+                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
+                              0.0{" "}
+                              <span className="text-xs font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
+                            <Clock className="h-4 w-4" />
+                          </div>
                         </div>
                       </div>
                     </div>
