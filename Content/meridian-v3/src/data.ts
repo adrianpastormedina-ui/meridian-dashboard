@@ -15,7 +15,8 @@ export const UNIVERSITIES_DATA: University[] = [
     topDegrees: ['Economics', 'Computer Science', 'Government / Political Science'],
     meridianOffers: 98,
     badgeColor: '#A51C30',
-    description: 'Enfoque en liderazgo global y excelencia académica absoluta. Evaluamos el perfil integral con énfasis en el impacto social.'
+    description: 'Enfoque en liderazgo global y excelencia académica absoluta. Evaluamos el perfil integral con énfasis en el impacto social.',
+    description_en: 'Focus on global leadership and absolute academic excellence. We evaluate the comprehensive profile with emphasis on social impact.'
   },
   {
     id: 'stanford',
@@ -26,7 +27,8 @@ export const UNIVERSITIES_DATA: University[] = [
     topDegrees: ['Computer Science', 'Engineering', 'Symbolic Systems'],
     meridianOffers: 217,
     badgeColor: '#8C1515',
-    description: 'Espíritu emprendedor, innovación tecnológica y "vitalidad intelectual" sobresaliente.'
+    description: 'Espíritu emprendedor, innovación tecnológica y "vitalidad intelectual" sobresaliente.',
+    description_en: 'Entrepreneurial spirit, technological innovation, and outstanding "intellectual vitality".'
   },
   {
     id: 'yale',
@@ -37,7 +39,8 @@ export const UNIVERSITIES_DATA: University[] = [
     topDegrees: ['History', 'Political Science', 'Molecular Biophysics'],
     meridianOffers: 155,
     badgeColor: '#00356B',
-    description: 'Prestigiosa red humanística y de artes liberales. Valoramos el amor por el conocimiento y la comunidad.'
+    description: 'Prestigiosa red humanística y de artes liberales. Valoramos el amor por el conocimiento y la comunidad.',
+    description_en: 'Prestigious humanistic and liberal arts network. We value the love of knowledge and community.'
   },
   {
     id: 'columbia',
@@ -48,7 +51,8 @@ export const UNIVERSITIES_DATA: University[] = [
     topDegrees: ['Finance & Economics', 'Neuroscience', 'English Literature'],
     meridianOffers: 173,
     badgeColor: '#B9D9EB',
-    description: 'Ubicación cosmopolita en NYC con un Core Curriculum de rigurosidad legendaria.'
+    description: 'Ubicación cosmopolita en NYC con un Core Curriculum de rigurosidad legendaria.',
+    description_en: 'Cosmopolitan location in NYC with a legendarily rigorous Core Curriculum.'
   },
   {
     id: 'mit',
@@ -59,7 +63,8 @@ export const UNIVERSITIES_DATA: University[] = [
     topDegrees: ['Physics', 'Mathematics', 'Electrical Engineering'],
     meridianOffers: 63,
     badgeColor: '#A31F34',
-    description: 'La cuna del pensamiento experimental. Buscamos genios matemáticos con sed de resolver problemas reales.'
+    description: 'La cuna del pensamiento experimental. Buscamos genios matemáticos con sed de resolver problemas reales.',
+    description_en: 'The cradle of experimental thinking. We seek mathematical geniuses with a thirst for solving real problems.'
   },
   {
     id: 'princeton',
@@ -70,7 +75,8 @@ export const UNIVERSITIES_DATA: University[] = [
     topDegrees: ['Public Policy', 'Operations Research', 'Astrophysical Sciences'],
     meridianOffers: 126,
     badgeColor: '#FF6600',
-    description: 'Énfasis riguroso en investigación de pregrado. Exige una tesis senior impecable para graduarse.'
+    description: 'Énfasis riguroso en investigación de pregrado. Exige una tesis senior impecable para graduarse.',
+    description_en: 'Rigorous emphasis on undergraduate research. Requires an impeccable senior thesis to graduate.'
   },
   {
     id: 'cornell',
@@ -81,7 +87,8 @@ export const UNIVERSITIES_DATA: University[] = [
     topDegrees: ['Architecture', 'Hotel Administration', 'Applied Economics'],
     meridianOffers: 307,
     badgeColor: '#B31B1B',
-    description: '"Cualquier persona, cualquier estudio". El campus de la Ivy League más diverso académicamente.'
+    description: '"Cualquier persona, cualquier estudio". El campus de la Ivy League más diverso académicamente.',
+    description_en: '"Any person, any study." The most academically diverse campus in the Ivy League.'
   },
   {
     id: 'oxford',
@@ -92,7 +99,8 @@ export const UNIVERSITIES_DATA: University[] = [
     topDegrees: ['Philosophy, Politics and Economics (PPE)', 'Law', 'Medicine'],
     meridianOffers: 85,
     badgeColor: '#002147',
-    description: 'Sistema colegiado y tutoriales súper exigentes. Enfoque extremo en el conocimiento profundo de la materia seleccionada.'
+    description: 'Sistema colegiado y tutoriales súper exigentes. Enfoque extremo en el conocimiento profundo de la materia seleccionada.',
+    description_en: 'Collegiate system with highly demanding tutorials. Extreme focus on deep knowledge of the selected subject.'
   }
 ];
 
@@ -101,25 +109,39 @@ export const TUTORS_DATA: Tutor[] = [
     id: '1',
     name: 'Adrian Pastor',
     role: 'Managing Coach & Senior Advisor',
+    role_en: 'Managing Coach & Senior Advisor',
     bio: 'Coach especialista en admisiones extranjeras. Experto en SAT Math (1580 Score) e IB (43 puntos). Ha asesorado exitosamente a más de 80 alumnos latinoamericanos para ingresar a la Ivy League.',
+    bio_en: 'International admissions specialist coach. Expert in SAT Math (1580 Score) and IB (43 points). Has successfully advised over 80 Latin American students to gain entry into the Ivy League.',
     achievements: [
       '1er Puesto & Abanderado - Colegio Abraham Lincoln',
       'Beca de Excelencia Integral en Ivy League',
       'Consultor certificado en College Admissions'
     ],
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80', // Student portal avatar
+    achievements_en: [
+      '1st Place & Valedictorian - Abraham Lincoln School',
+      'Full Excellence Scholarship at Ivy League',
+      'Certified College Admissions Consultant'
+    ],
+    avatar: '/adrian.png',
     subjects: ['SAT Math', 'SAT Reading & Writing', 'IB Physics HL/SL', 'Admissions Coaching'],
-    rating: 4.9
+    rating: 5.0
   },
   {
     id: '2',
     name: 'Sofía Ruíz',
     role: 'IB Senior Mentor & TOK Specialist',
+    role_en: 'IB Senior Mentor & TOK Specialist',
     bio: 'Graduada de la Ivy League y ex-coordinadora de Ensayos del IB. Ha ayudado a docenas de estudiantes de Meridian con redacción académica de Teoría del Conocimiento (TOK) y Monografías completadas con grado "A".',
+    bio_en: 'Ivy League graduate and former IB Essay Coordinator. Has helped dozens of Meridian students with academic writing for Theory of Knowledge (TOK) and Extended Essays completed with grade "A".',
     achievements: [
       'Graduada con Honores de Columbia University',
       'Examinadora oficial externa en Ensayos Ampliados (EE) e IB Literature',
       '8+ años de experiencia docente bilingüe'
+    ],
+    achievements_en: [
+      'Graduated with Honors from Columbia University',
+      'Official External Examiner for Extended Essays (EE) and IB Literature',
+      '8+ years of bilingual teaching experience'
     ],
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80',
     subjects: ['IB TOK', 'Extended Essay (EE)', 'IB Business Management', 'English Essay Editing'],
@@ -129,11 +151,18 @@ export const TUTORS_DATA: Tutor[] = [
     id: '3',
     name: 'Esteban Montalván',
     role: 'Extracurricular & Core Profile Engineer',
+    role_en: 'Extracurricular & Core Profile Engineer',
     bio: 'Especialista en estructuración de actividades extracurriculares de alto impacto. Ha guiado a estudiantes en la creación de ONGs, startups tecnológicas escolares y proyectos de investigación publicados internacionalmente.',
+    bio_en: 'Specialist in structuring high-impact extracurricular activities. Has guided students in creating NGOs, school tech startups, and internationally published research projects.',
     achievements: [
       'Master en Creatividad Educativa de Stanford University',
       'Fundador de 2 startups de impacto juvenil en Latinoamérica',
       'Asesor de Estrategia de Perfiles de Admisión Exclusivos'
+    ],
+    achievements_en: [
+      "Master's in Educational Creativity from Stanford University",
+      'Founder of 2 youth-impact startups in Latin America',
+      'Exclusive Admissions Profile Strategy Advisor'
     ],
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80',
     subjects: ['Profile Architecture', 'Personal Statement', 'Creative Writing', 'Interview Prep'],
@@ -145,33 +174,49 @@ export const TIMELINE_DATA: Milestone[] = [
   {
     id: 'm1',
     grade: '9° Grado',
+    grade_en: '9th Grade',
     period: 'Fase Inicial (Exploración)',
+    period_en: 'Initial Phase (Exploration)',
     title: 'Cimentación y Pasiones',
+    title_en: 'Foundation & Passions',
     description: 'Evaluación del perfil de intereses. Selección óptima de cursos de nivel avanzado de preparación. Inicio de registros preliminares académicos y deportes.',
+    description_en: 'Interest profile assessment. Optimal selection of advanced-level prep courses. Start of preliminary academic and athletic records.',
     category: 'Profile'
   },
   {
     id: 'm2',
     grade: '10° Grado',
+    grade_en: '10th Grade',
     period: 'Fase de Consolidación',
+    period_en: 'Consolidation Phase',
     title: 'Estrategia de Perfil y Primer SAT',
+    title_en: 'Profile Strategy & First SAT',
     description: 'Elección preliminar de asignaturas en Bachillerato Internacional (IB) Higher Level. Diseño y lanzamiento del proyecto extracurricular emblemático (Capstone). Preparación inicial del examen SAT.',
+    description_en: 'Preliminary selection of International Baccalaureate (IB) Higher Level subjects. Design and launch of the flagship extracurricular Capstone project. Initial SAT preparation.',
     category: 'SAT'
   },
   {
     id: 'm3',
     grade: '11° Grado',
+    grade_en: '11th Grade',
     period: 'Año Académico Crítico',
+    period_en: 'Critical Academic Year',
     title: 'Rigor IB Extremo y Resultados SAT',
+    title_en: 'Extreme IB Rigor & SAT Results',
     description: 'Desarrollo riguroso de la Monografía y Ensayos de Teoría del Conocimiento (TOK). Obtención del puntaje meta en el SAT (Meta: 1500+). Planificación de visitas virtuales o presenciales a campus.',
+    description_en: 'Rigorous development of the Extended Essay and Theory of Knowledge (TOK) essays. Achieving the target SAT score (Goal: 1500+). Planning virtual or in-person campus visits.',
     category: 'IB'
   },
   {
     id: 'm4',
     grade: '12° Grado',
+    grade_en: '12th Grade',
     period: 'Fase de Aplicación',
+    period_en: 'Application Phase',
     title: 'Proceso de Envío a Universidades',
+    title_en: 'University Application Process',
     description: 'Redacción y refinamiento individual del Common App Personal Statement y ensayos suplementarios. Consolidación de cartas de recomendación de profesores. Envío de postulaciones en fases Early Decision/Early Action y Regular Decision.',
+    description_en: 'Individual drafting and refinement of the Common App Personal Statement and supplemental essays. Consolidation of teacher recommendation letters. Submission in Early Decision/Early Action and Regular Decision phases.',
     category: 'Essays'
   }
 ];

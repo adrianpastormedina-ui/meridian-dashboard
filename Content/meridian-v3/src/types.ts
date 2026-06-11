@@ -17,14 +17,18 @@ export interface University {
   meridianOffers: number;
   badgeColor: string;
   description: string;
+  description_en: string;
 }
 
 export interface Tutor {
   id: string;
   name: string;
   role: string;
+  role_en: string;
   bio: string;
+  bio_en: string;
   achievements: string[];
+  achievements_en: string[];
   avatar: string;
   subjects: string[];
   rating: number;
@@ -32,16 +36,20 @@ export interface Tutor {
 
 export interface Milestone {
   id: string;
-  grade: string; // "9° Grado", "10° Grado", etc.
-  period: string; // e.g., "Q1", "Semestre 1"
+  grade: string;
+  grade_en: string;
+  period: string;
+  period_en: string;
   title: string;
+  title_en: string;
   description: string;
+  description_en: string;
   category: 'IB' | 'SAT' | 'Profile' | 'Essays';
 }
 
 export interface Report {
-  advances: string; // "Avance para mamá/papá"
-  agreements: string; // "Acuerdos para la siguiente sesión"
+  advances: string;
+  agreements: string;
 }
 
 export interface Session {
@@ -50,7 +58,7 @@ export interface Session {
   time: string;
   subject: string;
   tutorName: string;
-  duration: number; // in hours or minutes (e.g. 1.0, 1.5, 3.0)
+  duration: number;
   status: 'completed' | 'scheduled';
   report: Report | null;
   packageId: string;

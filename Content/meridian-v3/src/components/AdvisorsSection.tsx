@@ -122,7 +122,7 @@ export default function AdvisorsSection({ language, onOpenConsultation }: Adviso
                 {/* Coach Bio */}
                 <div>
                   <p className="text-sm sm:text-base text-slate-200 leading-relaxed">
-                    {currentTutor.bio}
+                    {language === 'EN' ? currentTutor.bio_en : currentTutor.bio}
                   </p>
                 </div>
 
@@ -133,7 +133,7 @@ export default function AdvisorsSection({ language, onOpenConsultation }: Adviso
                       {t.advisors_achievements}
                     </h4>
                     <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                      {currentTutor.achievements.map((item, id) => (
+                      {(language === 'EN' ? currentTutor.achievements_en : currentTutor.achievements).map((item, id) => (
                         <li key={id} className="flex items-start gap-2">
                           <Award className="h-4 w-4 text-brand-gold shrink-0 mt-0.5" />
                           <span>{item}</span>

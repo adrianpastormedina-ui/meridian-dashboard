@@ -118,7 +118,7 @@ export default function UniversitiesShowcase({ language }: UniversitiesShowcaseP
                   </div>
 
                   <p className="text-xs sm:text-sm text-slate-300 pl-2 leading-relaxed">
-                    {uni.description}
+                    {language === 'EN' ? uni.description_en : uni.description}
                   </p>
 
                   {/* Sub Rates Card Area */}

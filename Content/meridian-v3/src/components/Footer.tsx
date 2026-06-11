@@ -4,18 +4,32 @@
  */
 
 import React from 'react';
-import { GraduationCap, Heart, ExternalLink, ShieldAlert } from 'lucide-react';
+import { GraduationCap, Heart } from 'lucide-react';
 import { Language } from '../types';
+import { DICTIONARY } from '../data';
 
 interface FooterProps {
   language: Language;
 }
 
 export default function Footer({ language }: FooterProps) {
+  const t = DICTIONARY[language];
+
+  const navLinks = [
+    { href: '#inicio', label: t.nav_home },
+    { href: '#nosotros', label: t.nav_about },
+    { href: '#servicios', label: t.nav_services },
+    { href: '#metodologia', label: t.nav_methodology },
+    { href: '#top-universidades', label: t.nav_universities },
+  ];
+
+  const crafted = language === 'EN'
+    ? 'high-fidelity fluid transitions.'
+    : 'transiciones fluidas de alta gama.';
+
   return (
     <footer className="bg-[#04060C] border-t border-white/5 py-12 relative overflow-hidden">
       
-      {/* Decorative background grid subtle */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
         
         {/* Left trademark info */}
@@ -33,13 +47,13 @@ export default function Footer({ language }: FooterProps) {
           </div>
         </div>
 
-        {/* Center links indicator */}
+        {/* Center nav links */}
         <div className="flex flex-wrap justify-center gap-6 text-xs text-slate-400 font-mono">
-          <a href="#inicio" className="hover:text-brand-gold transition-colors">INICIO</a>
-          <a href="#nosotros" className="hover:text-brand-gold transition-colors">NOSOTROS</a>
-          <a href="#servicios" className="hover:text-brand-gold transition-colors">SERVICIOS</a>
-          <a href="#metodologia" className="hover:text-[#E2B254] transition-colors">METODOLOGÍA</a>
-          <a href="#top-universidades" className="hover:text-brand-gold transition-colors">UNIVERSIDADES</a>
+          {navLinks.map((link) => (
+            <a key={link.href} href={link.href} className="hover:text-brand-gold transition-colors uppercase">
+              {link.label}
+            </a>
+          ))}
         </div>
 
         {/* Right copyright metadata */}
@@ -48,7 +62,7 @@ export default function Footer({ language }: FooterProps) {
           <p className="flex items-center justify-center md:justify-end gap-1">
             <span>Crafted with</span>
             <Heart className="h-3 w-3 text-brand-crimson fill-brand-crimson" />
-            <span>transiciones fluidas de alta gama.</span>
+            <span>{crafted}</span>
           </p>
         </div>
 
