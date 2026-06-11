@@ -6,7 +6,16 @@ export default function WhatsAppButton() {
   
   // Puedes cambiar el número y el mensaje aquí
   const phoneNumber = "51987593657"; 
-  const message = "Hola, me gustaría solicitar una cotización y más información sobre la consultoría.";
+  const message = `¡Hola! 👋 Me comunico con Meridian Apex Zenith Consulting 🏛️🎓.
+Me gustaría solicitar más información y una cotización.
+
+Estoy interesado/a en la siguiente opción (puedes borrar las que no te interesen):
+
+1️⃣ Tutorías Especializadas IB 📚
+2️⃣ Prep SAT / Diagnósticos 📝
+3️⃣ Asesorías Universitarias Premium Meridian International 🌍🎓
+
+¡Quedo a la espera de su respuesta! ✨`;
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
