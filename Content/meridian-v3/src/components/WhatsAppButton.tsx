@@ -5,7 +5,7 @@ export default function WhatsAppButton() {
   const [isHovered, setIsHovered] = useState(false);
   
   // Puedes cambiar el número y el mensaje aquí
-  const phoneNumber = "51987654321"; 
+  const phoneNumber = "51987593657"; 
   const message = "Hola, me gustaría solicitar una cotización y más información sobre la consultoría.";
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
