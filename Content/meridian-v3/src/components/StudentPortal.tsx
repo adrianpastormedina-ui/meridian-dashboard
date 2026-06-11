@@ -417,50 +417,6 @@ export default function StudentPortal({ language }: StudentPortalProps) {
 
       <div className="max-w-7xl mx-auto relative z-10 px-1">
         
-        {/* Dynamic Dual-Role Switch Toolbar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-[#0C122C]/90 p-4 rounded-2xl border border-white/5 shadow-xl">
-          <div className="flex items-center space-x-3">
-            <span className="p-2 bg-brand-gold/15 text-[#E2B254] rounded-xl animate-pulse">
-              <Sparkles className="h-4 w-4" />
-            </span>
-            <div>
-              <span className="text-[10px] font-sans font-bold tracking-widest text-[#E2B254] block uppercase">
-                HERRAMIENTA INTEGRADORA DIGITAL
-              </span>
-              <h3 className="text-sm font-bold text-slate-100 font-sans">
-                {language === "ES"
-                  ? "Simulador de Roles de Mentoría"
-                  : "Mentoring Role Simulator"}
-              </h3>
-            </div>
-          </div>
-
-          <div className="inline-flex bg-[#070B19] p-1 rounded-xl border border-white/10 shrink-0">
-            <button
-              onClick={() => setUserRole("student")}
-              className={`px-4 py-2 rounded-lg text-xs font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                userRole === "student"
-                  ? "bg-[#E2B254] text-[#070B19] font-black shadow-md"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              <Users className="h-3.5 w-3.5" />
-              Vista Alumno
-            </button>
-            <button
-              onClick={() => setUserRole("tutor")}
-              className={`px-4 py-2 rounded-lg text-xs font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                userRole === "tutor"
-                  ? "bg-[#AE2024] text-white font-black shadow-md"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              <Bot className="h-3.5 w-3.5" />
-              Tutor / Admin
-            </button>
-          </div>
-        </div>
-
         {userRole === "student" ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#0c122c] h-auto min-h-[700px] items-stretch">
             
