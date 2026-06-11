@@ -110,11 +110,113 @@ const PROGRAMS_PLANS: ProgramPlan[] = [
 ];
 
 interface StudentPortalProps {
-  language: Language;
+  language?: Language;
 }
 
-export default function StudentPortal({ language }: StudentPortalProps) {
-  const t = DICTIONARY[language];
+const BookingFormBlock = ({ programName, availableHours, optionsSubjects, optionsTutors, onSchedule, t }: any) => {
+  const [subject, setSubject] = useState(optionsSubjects[0]);
+  const [tutor, setTutor] = useState(optionsTutors[0].value);
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [duration, setDuration] = useState(1.0);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccess(true);
+    setTimeout(() => {
+      onSchedule({ subject, tutor, date, time, duration, programName });
+      setSuccess(false);
+      setSubject(optionsSubjects[0]);
+      setTutor(optionsTutors[0].value);
+      setDate("");
+      setTime("");
+      setDuration(1.0);
+    }, 1500);
+  };
+
+  return (
+    <div className="bg-[#0C122C] rounded-2xl border border-white/10 shadow-xl overflow-hidden">
+      <div className="bg-[#151F47] px-6 py-4 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] font-sans font-bold tracking-wider text-[#E2B254] uppercase block">
+            {t.portal_program || "PROGRAMA"}
+          </span>
+          <h3 className="text-lg font-black text-white font-sans">{programName}</h3>
+        </div>
+        <div className="text-right">
+          <span className="text-[10px] font-sans font-bold text-slate-400 block pb-0.5">SALDO DISPONIBLE</span>
+          <span className="text-xl font-sans font-black text-[#E2B254]">{availableHours.toFixed(1)} Hrs</span>
+        </div>
+      </div>
+      <form onSubmit={handleSubmit} className="p-6 space-y-5 bg-white text-slate-700">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_subject}</label>
+            <select
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]"
+            >
+              {optionsSubjects.map((opt: string) => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_mentor}</label>
+            <select
+              value={tutor}
+              onChange={(e) => setTutor(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]"
+            >
+              {optionsTutors.map((opt: any) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_date}</label>
+            <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]" />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_time}</label>
+            <input type="time" required value={time} onChange={(e) => setTime(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]" />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_duration}</label>
+            <select value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]">
+              <option value={1.0}>1.0 Hora</option>
+              <option value={1.5}>1.5 Horas</option>
+              <option value={2.0}>2.0 Horas</option>
+              <option value={3.0}>3.0 Horas</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <div className="text-xs text-slate-400">
+            Equivale a: <strong>{duration} Hr(s)</strong> de tu saldo de horas.
+          </div>
+          <button type="submit" disabled={success} className="py-3 px-6 bg-[#0C122C] hover:bg-[#E2B254] hover:text-[#0C122C] text-xs font-black text-white rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer">
+            {success ? (
+              <><span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" /> Confirmando...</>
+            ) : (
+              <><CalendarDays className="h-4 w-4" /> {t.portal_book_btn}</>
+            )}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
+  const [lang, setLang] = useState<Language>(language);
+  const t = DICTIONARY[lang] || DICTIONARY["ES"];
 
   // Auth protection check
   useEffect(() => {
@@ -257,13 +359,10 @@ export default function StudentPortal({ language }: StudentPortalProps) {
   const [agreementsInput, setAgreementsInput] = useState("");
   const [isGeneratingIA, setIsGeneratingIA] = useState(false);
 
-  // Booking Form State
-  const [bookingSubject, setBookingSubject] = useState("IB Physics HL");
-  const [bookingDate, setBookingDate] = useState("2026-06-20");
-  const [bookingTime, setBookingTime] = useState("09:00");
-  const [bookingDuration, setBookingDuration] = useState<number>(1.5);
-  const [bookingTutor, setBookingTutor] = useState("Adrian Pastor");
-  const [bookingSuccess, setBookingSuccess] = useState(false);
+  // 3 Distinct Program Balances
+  const [ibHours, setIbHours] = useState(15.0);
+  const [satHours, setSatHours] = useState(10.0);
+  const [uniHours, setUniHours] = useState(5.0);
 
   // Bundle pricing Form State
   const [purchaseType, setPurchaseType] = useState<"ib" | "sat" | "university">("ib");
@@ -277,57 +376,37 @@ export default function StudentPortal({ language }: StudentPortalProps) {
     ? activePackage.hoursTotal - activePackage.hoursUsed
     : 4.5;
 
-  // Custom scheduling action
-  const handleScheduleSession = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (totalHoursLeft < bookingDuration) {
-      alert(
-        language === "ES"
-          ? 'Saldo de horas insuficiente. Por favor, adquiere más horas en la "Tienda de Paquetes".'
-          : 'Insufficient hours left. Please top up your balance in the "Hour Store".',
-      );
+  const handleScheduleBlock = (data: any) => {
+    let hasEnoughHours = false;
+    if (data.programName === "Tutorías Especializadas IB" && ibHours >= data.duration) hasEnoughHours = true;
+    if (data.programName === "Preparación SAT Digital" && satHours >= data.duration) hasEnoughHours = true;
+    if (data.programName === "Asesorías Universitarias Premium" && uniHours >= data.duration) hasEnoughHours = true;
+
+    if (!hasEnoughHours) {
+      alert(lang === "ES" ? "Saldo insuficiente para este programa." : "Insufficient balance for this program.");
       return;
     }
 
-    setBookingSuccess(true);
-    setTimeout(() => {
-      const formattedDate = new Date(bookingDate)
-        .toLocaleDateString("es-ES", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
-        .toUpperCase()
-        .replace(".", "");
+    if (data.programName === "Tutorías Especializadas IB") setIbHours((prev) => prev - data.duration);
+    if (data.programName === "Preparación SAT Digital") setSatHours((prev) => prev - data.duration);
+    if (data.programName === "Asesorías Universitarias Premium") setUniHours((prev) => prev - data.duration);
 
-      const newSession: Session = {
-        id: `pending-${Date.now()}`,
-        date: formattedDate,
-        time: bookingTime,
-        subject: bookingSubject,
-        tutorName: bookingTutor,
-        duration: bookingDuration,
-        status: "pending_confirmation",
-        report: null,
-        packageId: "p_premium",
-      };
+    const formattedDate = new Date(data.date).toLocaleDateString("es-ES", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase().replace(".", "");
 
-      setPackages((prev) =>
-        prev.map((p) => {
-          if (p.id === "p_premium") {
-            return {
-              ...p,
-              hoursUsed: Number((p.hoursUsed + bookingDuration).toFixed(2)),
-            };
-          }
-          return p;
-        }),
-      );
+    const newSession: Session = {
+      id: `pending-${Date.now()}`,
+      date: formattedDate,
+      time: data.time,
+      subject: data.subject,
+      tutorName: data.tutor,
+      duration: data.duration,
+      status: "pending_confirmation",
+      report: null,
+      packageId: "p_custom",
+    };
 
-      setSessions([newSession, ...sessions]);
-      setBookingSuccess(false);
-      setStudentTab("historial"); 
-    }, 1500);
+    setSessions([newSession, ...sessions]);
+    setStudentTab("historial");
   };
 
   // Live bundle top-up
@@ -438,13 +517,21 @@ export default function StudentPortal({ language }: StudentPortalProps) {
               id="portal-student-sidebar"
             >
               <div className="space-y-10">
-                <div className="flex items-center space-x-3 pb-6 border-b border-white/5">
-                  <div className="h-8 w-8 bg-[#E2B254] rounded-lg shadow-md flex items-center justify-center text-[#070B19] font-sans font-black text-sm">
-                    M
+                <div className="flex items-center justify-between pb-6 border-b border-white/5">
+                  <div className="flex items-center space-x-3">
+                    <div className="h-8 w-8 bg-[#E2B254] rounded-lg shadow-md flex items-center justify-center text-[#070B19] font-sans font-black text-sm">
+                      M
+                    </div>
+                    <span className="text-base font-sans font-black tracking-[0.25em] text-[#E2B254] uppercase">
+                      MERIDIAN
+                    </span>
                   </div>
-                  <span className="text-base font-sans font-black tracking-[0.25em] text-[#E2B254] uppercase">
-                    MERIDIAN
-                  </span>
+                  <button
+                    onClick={() => setLang(lang === "ES" ? "EN" : "ES")}
+                    className="flex items-center gap-1.5 px-2 py-1 rounded border border-white/20 text-xs font-bold text-slate-300 hover:text-white hover:border-[#E2B254] transition-all"
+                  >
+                    {lang}
+                  </button>
                 </div>
 
                 <div className="space-y-1.5 font-sans">
@@ -462,7 +549,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                     <Clock
                       className={`h-4.5 w-4.5 ${studentTab === "historial" ? "text-[#E2B254]" : "text-slate-400"}`}
                     />
-                    Historial de Sesiones
+                    {t.portal_history}
                   </button>
 
                   <button
@@ -479,7 +566,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                     <CalendarDays
                       className={`h-4.5 w-4.5 ${studentTab === "agendar" ? "text-[#E2B254]" : "text-slate-400"}`}
                     />
-                    Agendar Sesión
+                    {t.portal_book_session}
                   </button>
 
                   <button
@@ -496,7 +583,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                     <ShoppingBag
                       className={`h-4.5 w-4.5 ${studentTab === "tienda" ? "text-[#E2B254]" : "text-slate-400"}`}
                     />
-                    Tienda de Paquetes
+                    {t.portal_buy_hours}
                   </button>
 
                   <button
@@ -513,7 +600,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                     <FileText
                       className={`h-4.5 w-4.5 ${studentTab === "recursos" ? "text-[#E2B254]" : "text-slate-400"}`}
                     />
-                    Banco de Recursos
+                    {t.portal_materials}
                   </button>
                 </div>
               </div>
@@ -546,7 +633,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                   className="w-full flex items-center gap-2 py-2.5 px-4 font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all text-xs cursor-pointer"
                 >
                   <LogOut className="h-4 w-4 text-slate-400" />
-                  Cerrar Sesión
+                  {t.portal_logout}
                 </button>
               </div>
             </div>
@@ -632,7 +719,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                               : "text-slate-600 hover:text-slate-950"
                           }`}
                         >
-                          Todas ({sessions.length})
+                          {t.portal_all} ({sessions.length})
                         </button>
                         <button
                           onClick={() => setFilterStatus("pending_confirmation")}
@@ -642,7 +729,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                               : "text-slate-600 hover:text-slate-950"
                           }`}
                         >
-                          Por Confirmar (
+                          {t.portal_pending} (
                           {sessions.filter((s) => s.status === "pending_confirmation").length}
                           )
                         </button>
@@ -654,7 +741,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                               : "text-slate-600 hover:text-slate-950"
                           }`}
                         >
-                          Confirmadas (
+                          {t.portal_confirmed} (
                           {sessions.filter((s) => s.status === "scheduled").length}
                           )
                         </button>
@@ -666,7 +753,7 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                               : "text-slate-600 hover:text-slate-950"
                           }`}
                         >
-                          Completadas (
+                          {t.portal_completed} (
                           {sessions.filter((s) => s.status === "completed").length}
                           )
                         </button>
@@ -682,10 +769,11 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                         <table className="w-full text-left border-collapse font-sans text-xs sm:text-sm">
                           <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">
-                              <th className="py-4 px-6">Fecha y Hora</th>
-                              <th className="py-4 px-6">Materia / Tema</th>
-                              <th className="py-4 px-6">Duración</th>
-                              <th className="py-4 px-6">Estado</th>
+                              <th className="py-4 px-6">{t.portal_date_time}</th>
+                              <th className="py-4 px-6">{t.portal_subject}</th>
+                              <th className="py-4 px-6">{t.portal_program}</th>
+                              <th className="py-4 px-6">{t.portal_duration}</th>
+                              <th className="py-4 px-6">{t.portal_status}</th>
                               <th className="py-4 px-6 text-center w-12">Detalles</th>
                             </tr>
                           </thead>
@@ -723,6 +811,9 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                                             ? "Sesión Confirmada"
                                             : "Falta Confirmación del Profesor"}
                                         </div>
+                                      </td>
+                                      <td className="py-4 px-6 font-medium text-slate-600 text-[11px]">
+                                        Tutorías IB
                                       </td>
                                       <td className="py-4 px-6 font-semibold font-mono text-[#E2B254]">
                                         {session.duration.toFixed(1)} Hrs
@@ -829,139 +920,39 @@ export default function StudentPortal({ language }: StudentPortalProps) {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
                       <div className="space-y-1">
                         <h2 className="text-2xl sm:text-3xl font-sans font-black text-slate-900 tracking-tight leading-none">
-                          Agendar Nueva Sesión
+                          {t.portal_book_title}
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 font-sans font-medium">
-                          Coordina tu clase con la plana de mentores asignados.
+                          {t.portal_book_subtitle}
                         </p>
-                      </div>
-                      
-                      <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4 shrink-0">
-                        <div className="text-right">
-                          <span className="text-[10px] font-sans font-bold text-slate-400 block pb-0.5">SALDO DISPONIBLE</span>
-                          <span className="text-2xl font-sans font-black text-slate-900">{totalHoursLeft.toFixed(1)} Hrs</span>
-                        </div>
-                        <div className="p-2 bg-amber-50 rounded-xl text-[#E2B254]">
-                          <Clock className="h-6 w-6" />
-                        </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                      <form
-                        onSubmit={handleScheduleSession}
-                        className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200/60 shadow-sm space-y-5 text-slate-705 text-slate-700"
-                      >
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-500 uppercase">Materia</label>
-                            <select
-                              value={bookingSubject}
-                              onChange={(e) => setBookingSubject(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]"
-                            >
-                              <option value="IB Physics HL">IB Physics HL</option>
-                              <option value="IB Math AA HL">IB Math AA HL</option>
-                              <option value="Ensayo - TdC (Teoría del Conocimiento)">Ensayo TdC</option>
-                              <option value="Monografía - Extended Essay">Monografía (Física/Hist)</option>
-                            </select>
-                          </div>
-
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-500 uppercase">Asesor / Mentor</label>
-                            <select
-                              value={bookingTutor}
-                              onChange={(e) => setBookingTutor(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]"
-                            >
-                              <option value="Adrian Pastor">Adrian Pastor (Física / Monografías)</option>
-                              <option value="Sofía Ruíz">Sofía Ruíz (Math AA / Ensayos)</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-500 uppercase">Fecha</label>
-                            <input
-                              type="date"
-                              required
-                              value={bookingDate}
-                              onChange={(e) => setBookingDate(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]"
-                            />
-                          </div>
-
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-500 uppercase">Hora de Inicio</label>
-                            <input
-                              type="time"
-                              required
-                              value={bookingTime}
-                              onChange={(e) => setBookingTime(e.target.value)}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]"
-                            />
-                          </div>
-
-                          <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-500 uppercase">Duración</label>
-                            <select
-                              value={bookingDuration}
-                              onChange={(e) => setBookingDuration(Number(e.target.value))}
-                              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]"
-                            >
-                              <option value={1.0}>1.0 Hora</option>
-                              <option value={1.5}>1.5 Horas</option>
-                              <option value={2.0}>2.0 Horas</option>
-                              <option value={3.0}>3.0 Horas</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                          <div className="text-xs text-slate-400">
-                            Equivale a: <strong>{bookingDuration} Hr(s)</strong> de tu saldo de horas.
-                          </div>
-
-                          <button
-                            type="submit"
-                            disabled={bookingSuccess}
-                            className="py-3 px-6 bg-[#0C122C] hover:bg-[#E2B254] hover:text-[#0C122C] text-xs font-black text-white rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
-                          >
-                            {bookingSuccess ? (
-                              <>
-                                <span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" />
-                                Confirmando con el Mentor...
-                              </>
-                            ) : (
-                              <>
-                                <CalendarIcon className="h-4 w-4" />
-                                Agendar Clase Ahora
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </form>
-
-                      <div className="lg:col-span-5 bg-[#0C122C] p-6 rounded-2xl text-white border border-white/5 space-y-4 shadow-lg">
-                        <span className="text-[10px] font-sans font-bold tracking-wider text-[#E2B254] uppercase block">ESTADO DE RESERVA</span>
-                        <h4 className="text-sm font-black font-sans">Compensación de Horas</h4>
-                        <div className="space-y-3 text-xs text-slate-350">
-                          <div className="flex justify-between">
-                            <span>Saldo actual:</span>
-                            <span className="text-white font-mono">{totalHoursLeft.toFixed(1)} Hrs</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Horas a descontar:</span>
-                            <span className="text-[#E2B254] font-mono">{bookingDuration.toFixed(1)} Hrs</span>
-                          </div>
-                          <div className="h-px bg-white/10" />
-                          <div className="flex justify-between font-bold text-white">
-                            <span>Saldo Restante estimado:</span>
-                            <span className="text-[#E2B254] font-mono">{(totalHoursLeft - bookingDuration).toFixed(1)} Hrs</span>
-                          </div>
-                        </div>
-                      </div>
+                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+                      <BookingFormBlock
+                        t={t}
+                        programName="Tutorías Especializadas IB"
+                        availableHours={ibHours}
+                        optionsSubjects={["IB Physics HL", "IB Math AA HL", "Ensayo - TdC (Teoría del Conocimiento)", "Monografía - Extended Essay"]}
+                        optionsTutors={[{label: "Adrian Pastor (Física / Monografías)", value: "Adrian Pastor"}, {label: "Sofía Ruíz (Math AA / Ensayos)", value: "Sofía Ruíz"}]}
+                        onSchedule={handleScheduleBlock}
+                      />
+                      <BookingFormBlock
+                        t={t}
+                        programName="Preparación SAT Digital"
+                        availableHours={satHours}
+                        optionsSubjects={["SAT Math", "SAT Reading & Writing", "SAT Full Practice Test"]}
+                        optionsTutors={[{label: "Adrian Pastor (Math)", value: "Adrian Pastor"}, {label: "Esteban Montalván (Reading)", value: "Esteban Montalván"}]}
+                        onSchedule={handleScheduleBlock}
+                      />
+                      <BookingFormBlock
+                        t={t}
+                        programName="Asesorías Universitarias Premium"
+                        availableHours={uniHours}
+                        optionsSubjects={["Profile Architecture", "Personal Statement", "Creative Writing", "Interview Prep"]}
+                        optionsTutors={[{label: "Esteban Montalván (Profile Engineer)", value: "Esteban Montalván"}]}
+                        onSchedule={handleScheduleBlock}
+                      />
                     </div>
                   </div>
                 )}
