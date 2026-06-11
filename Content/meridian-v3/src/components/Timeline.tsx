@@ -70,7 +70,7 @@ export default function Timeline({ language }: TimelineProps) {
             {t.timeline_title}
           </h2>
           <p className="text-slate-350 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            El camino hacia las mejores universidades se planifica trimestre a trimestre. El orden y la rigurosidad previenen el estrés de último año.
+            {t.timeline_desc}
           </p>
         </div>
 
@@ -138,19 +138,19 @@ export default function Timeline({ language }: TimelineProps) {
                     <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-slate-400">
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="h-4 w-4 text-[#E2B254] shrink-0" />
-                        <span>Soporte uno-a-uno garantizado</span>
+                        <span>{t.timeline_check_1}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="h-4 w-4 text-[#E2B254] shrink-0" />
-                        <span>Revisión por directores consultores</span>
+                        <span>{t.timeline_check_2}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="h-4 w-4 text-[#E2B254] shrink-0" />
-                        <span>Material del aula y simulados</span>
+                        <span>{t.timeline_check_3}</span>
                       </div>
                       <div className="flex items-center space-x-2">
                         <CheckCircle className="h-4 w-4 text-[#E2B254] shrink-0" />
-                        <span>Alertas de plazos académicos</span>
+                        <span>{t.timeline_check_4}</span>
                       </div>
                     </div>
 

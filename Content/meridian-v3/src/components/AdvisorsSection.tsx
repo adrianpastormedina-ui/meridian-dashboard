@@ -78,7 +78,7 @@ export default function AdvisorsSection({ language, onOpenConsultation }: Adviso
             <div className="bg-brand-gold/5 p-5 border border-brand-gold/15 rounded-2xl flex items-start gap-3">
               <Sparkles className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
               <div className="text-xs text-slate-300 leading-relaxed font-sans">
-                <strong>¿Sabías qué?</strong> Todos nuestros mentores escribieron monografías calificadas con grado &apos;A&apos; o rindieron el examen SAT obteniendo puntajes en el percentil 99%.
+                <strong>{t.advisors_did_you_know}</strong> {t.advisors_did_you_know_desc}
               </div>
             </div>
           </div>
@@ -114,7 +114,7 @@ export default function AdvisorsSection({ language, onOpenConsultation }: Adviso
                   </div>
 
                   <div className="px-4 py-2 bg-slate-900 border border-brand-gold/20 rounded-xl text-center shrink-0">
-                    <span className="text-xs text-slate-400 block font-mono">CALIFICACIÓN</span>
+                    <span className="text-xs text-slate-400 block font-mono">{t.advisors_rating}</span>
                     <span className="text-sm font-bold text-brand-gold font-display">★ {currentTutor.rating} / 5.0</span>
                   </div>
                 </div>
@@ -163,7 +163,7 @@ export default function AdvisorsSection({ language, onOpenConsultation }: Adviso
                 {/* Schedule simulation button */}
                 <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
                   <div className="text-xs text-slate-400 font-sans">
-                    Reserva una llamada exploratoria gratuita con {currentTutor.name.split(' ')[0]} para planificar el año.
+                    {t.advisors_book_desc_pre}{currentTutor.name.split(' ')[0]}{t.advisors_book_desc_post}
                   </div>
                   <button
                     onClick={() => onOpenConsultation(currentTutor)}

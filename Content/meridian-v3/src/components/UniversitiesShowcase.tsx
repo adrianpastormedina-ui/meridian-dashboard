@@ -60,7 +60,7 @@ export default function UniversitiesShowcase({ language }: UniversitiesShowcaseP
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                {loc === 'All' ? 'Todas' : loc === 'US' ? 'EEUU' : 'Reino Unido'}
+                {loc === 'All' ? t.unis_filter_all : loc === 'US' ? t.unis_filter_us : t.unis_filter_uk}
               </button>
             ))}
           </div>
@@ -162,7 +162,7 @@ export default function UniversitiesShowcase({ language }: UniversitiesShowcaseP
                   </div>
                   <div className="text-[11px] font-mono text-[#AE2024] font-bold tracking-wider uppercase flex items-center gap-0.5">
                     <Trophy className="h-3 w-3" />
-                    Top Choice
+                    {t.unis_top_choice}
                   </div>
                 </div>
 
@@ -174,7 +174,7 @@ export default function UniversitiesShowcase({ language }: UniversitiesShowcaseP
         {/* No results placeholder */}
         {filteredUnis.length === 0 && (
           <div className="text-center py-12 text-slate-500 font-display">
-            No se encontraron universidades que coincidan con la búsqueda.
+            {t.unis_no_results}
           </div>
         )}
 
