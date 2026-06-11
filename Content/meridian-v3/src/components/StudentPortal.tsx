@@ -3,7 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Calendar as CalendarIcon,
@@ -113,6 +115,16 @@ interface StudentPortalProps {
 
 export default function StudentPortal({ language }: StudentPortalProps) {
   const t = DICTIONARY[language];
+
+  // Auth protection check
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = '/';
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Dual-role simulation manager
   const [userRole, setUserRole] = useState<"student" | "tutor">("student");
