@@ -235,6 +235,12 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
 
   const totalHoursLeft = ibHours + satHours + uniHours;
 
+  // Tienda / Purchase Form States
+  const [purchaseType, setPurchaseType] = useState<"ib" | "sat" | "university">("ib");
+  const [purchaseCurrency, setPurchaseCurrency] = useState<"USD" | "PEN">("PEN");
+  const [purchaseHours, setPurchaseHours] = useState<number>(6);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+
   // Dual-role simulation manager
   const [userRole, setUserRole] = useState<"student" | "tutor">("student");
 
@@ -404,17 +410,13 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
     if (e) e.preventDefault();
     setPaymentSuccess(true);
     setTimeout(() => {
-      setPackages((prev) =>
-        prev.map((p) => {
-          if (p.id === "p_premium") {
-            return { ...p, hoursTotal: p.hoursTotal + purchaseHours };
-          }
-          return p;
-        }),
-      );
+      if (purchaseType === "ib") setIbHours((prev) => prev + purchaseHours);
+      if (purchaseType === "sat") setSatHours((prev) => prev + purchaseHours);
+      if (purchaseType === "university") setUniHours((prev) => prev + purchaseHours);
+
       setPaymentSuccess(false);
       alert(
-        language === "ES"
+        lang === "ES"
           ? `¡Transacción aprobada! Se han añadido ${purchaseHours} horas a tu cuenta.`
           : `Transaction approved! Added ${purchaseHours} hours to your balance.`,
       );
@@ -688,18 +690,50 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                         </p>
                       </div>
 
-                      <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4 shrink-0 hover:border-[#E2B254]/45 transition-all group">
-                        <div className="text-right">
-                          <span className="text-[10px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
-                            SALDO RESTANTE
-                          </span>
-                          <span className="text-2xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
-                            {totalHoursLeft.toFixed(1)}{" "}
-                            <span className="text-sm font-bold text-slate-500">Hrs</span>
-                          </span>
+                      <div className="flex flex-wrap items-center gap-3 shrink-0">
+                        {/* Box 1: IB */}
+                        <div className="bg-white px-4 py-2.5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-3 hover:border-[#E2B254]/40 transition-all">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-extrabold text-slate-400 tracking-wider block uppercase">
+                              {lang === "ES" ? "TUTORÍAS IB" : "IB TUTORING"}
+                            </span>
+                            <span className="text-base font-sans font-black text-slate-900 leading-none block mt-0.5">
+                              {ibHours.toFixed(1)} <span className="text-[10px] font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/10">
+                            <Clock className="h-4 w-4" />
+                          </div>
                         </div>
-                        <div className="p-2 bg-amber-50 rounded-xl text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
-                          <Clock className="h-6 w-6 animate-pulse" />
+
+                        {/* Box 2: SAT */}
+                        <div className="bg-white px-4 py-2.5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-3 hover:border-rose-500/40 transition-all">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-extrabold text-slate-400 tracking-wider block uppercase">
+                              {lang === "ES" ? "PREP SAT" : "SAT PREP"}
+                            </span>
+                            <span className="text-base font-sans font-black text-slate-900 leading-none block mt-0.5">
+                              {satHours.toFixed(1)} <span className="text-[10px] font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-rose-50 rounded-lg text-rose-500 border border-rose-500/10">
+                            <Clock className="h-4 w-4" />
+                          </div>
+                        </div>
+
+                        {/* Box 3: Uni */}
+                        <div className="bg-white px-4 py-2.5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-3 hover:border-indigo-500/40 transition-all">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-extrabold text-slate-400 tracking-wider block uppercase">
+                              {lang === "ES" ? "ASESORÍAS UNIV." : "UNI ADVISORY"}
+                            </span>
+                            <span className="text-base font-sans font-black text-slate-900 leading-none block mt-0.5">
+                              {uniHours.toFixed(1)} <span className="text-[10px] font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-indigo-50 rounded-lg text-indigo-500 border border-indigo-500/10">
+                            <Clock className="h-4 w-4" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -967,13 +1001,50 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                         </p>
                       </div>
 
-                      <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4 shrink-0">
-                        <div className="text-right">
-                          <span className="text-[10px] text-slate-400 block pb-0.5">SALDO DISPONIBLE</span>
-                          <span className="text-2xl font-sans font-black text-slate-900">{totalHoursLeft.toFixed(1)} Hrs</span>
+                      <div className="flex flex-wrap items-center gap-3 shrink-0">
+                        {/* Box 1: IB */}
+                        <div className="bg-white px-4 py-2.5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-3 hover:border-[#E2B254]/40 transition-all">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-extrabold text-slate-400 tracking-wider block uppercase">
+                              {lang === "ES" ? "TUTORÍAS IB" : "IB TUTORING"}
+                            </span>
+                            <span className="text-base font-sans font-black text-slate-900 leading-none block mt-0.5">
+                              {ibHours.toFixed(1)} <span className="text-[10px] font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/10">
+                            <Clock className="h-4 w-4" />
+                          </div>
                         </div>
-                        <div className="p-2 bg-amber-50 rounded-xl text-[#E2B254]">
-                          <Clock className="h-6 w-6" />
+
+                        {/* Box 2: SAT */}
+                        <div className="bg-white px-4 py-2.5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-3 hover:border-rose-500/40 transition-all">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-extrabold text-slate-400 tracking-wider block uppercase">
+                              {lang === "ES" ? "PREP SAT" : "SAT PREP"}
+                            </span>
+                            <span className="text-base font-sans font-black text-slate-900 leading-none block mt-0.5">
+                              {satHours.toFixed(1)} <span className="text-[10px] font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-rose-50 rounded-lg text-rose-500 border border-rose-500/10">
+                            <Clock className="h-4 w-4" />
+                          </div>
+                        </div>
+
+                        {/* Box 3: Uni */}
+                        <div className="bg-white px-4 py-2.5 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-3 hover:border-indigo-500/40 transition-all">
+                          <div className="text-right">
+                            <span className="text-[9px] font-sans font-extrabold text-slate-400 tracking-wider block uppercase">
+                              {lang === "ES" ? "ASESORÍAS UNIV." : "UNI ADVISORY"}
+                            </span>
+                            <span className="text-base font-sans font-black text-slate-900 leading-none block mt-0.5">
+                              {uniHours.toFixed(1)} <span className="text-[10px] font-bold text-slate-500">Hrs</span>
+                            </span>
+                          </div>
+                          <div className="p-1.5 bg-indigo-50 rounded-lg text-indigo-500 border border-indigo-500/10">
+                            <Clock className="h-4 w-4" />
+                          </div>
                         </div>
                       </div>
                     </div>
