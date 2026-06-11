@@ -762,11 +762,12 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                         <table className="w-full text-left border-collapse font-sans text-xs sm:text-sm">
                           <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">
-                              <th className="py-4 px-6">Fecha y Hora</th>
-                              <th className="py-4 px-6">Materia / Tema</th>
-                              <th className="py-4 px-6">Duración</th>
-                              <th className="py-4 px-6">Estado</th>
-                              <th className="py-4 px-6 text-center w-12">Detalles</th>
+                              <th className="py-4 px-6">{lang === "ES" ? "Fecha y Hora" : "Date & Time"}</th>
+                              <th className="py-4 px-6">{lang === "ES" ? "Materia / Tema" : "Subject / Topic"}</th>
+                              <th className="py-4 px-6">{lang === "ES" ? "Programa" : "Program"}</th>
+                              <th className="py-4 px-6">{lang === "ES" ? "Duración" : "Duration"}</th>
+                              <th className="py-4 px-6">{lang === "ES" ? "Estado" : "Status"}</th>
+                              <th className="py-4 px-6 text-center w-12">{lang === "ES" ? "Detalles" : "Details"}</th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-100">
@@ -798,10 +799,15 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                                         </div>
                                         <div className="text-[11px] text-slate-400 font-medium mt-0.5">
                                           {session.status === "completed"
-                                            ? "Sesión Realizada con Éxito"
+                                            ? (lang === "ES" ? "Sesión Realizada con Éxito" : "Session Successfully Completed")
                                             : session.status === "scheduled"
-                                            ? "Sesión Confirmada"
-                                            : "Falta Confirmación del Profesor"}
+                                            ? (lang === "ES" ? "Sesión Confirmada" : "Session Confirmed")
+                                            : (lang === "ES" ? "Falta Confirmación del Profesor" : "Pending Tutor Confirmation")}
+                                        </div>
+                                      </td>
+                                      <td className="py-4 px-6">
+                                        <div className="font-bold text-slate-600 text-xs">
+                                          {session.packageId === "p_premium" ? "Tutorías Especializadas IB" : session.packageId === "p_past" ? "Preparación SAT Digital" : session.packageId}
                                         </div>
                                       </td>
                                       <td className="py-4 px-6 font-semibold font-mono text-[#E2B254]">
@@ -811,17 +817,17 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                                         {session.status === "completed" ? (
                                           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-600 font-extrabold text-[10px] rounded-lg border border-emerald-100">
                                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                            Completado
+                                            {lang === "ES" ? "Completado" : "Completed"}
                                           </span>
                                         ) : session.status === "scheduled" ? (
                                           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-50 text-sky-600 font-extrabold text-[10px] rounded-lg border border-sky-100">
                                             <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
-                                            Confirmado
+                                            {lang === "ES" ? "Confirmado" : "Confirmed"}
                                           </span>
                                         ) : (
                                           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-600 font-extrabold text-[10px] rounded-lg border border-amber-100">
                                             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
-                                            Por Confirmar
+                                            {lang === "ES" ? "Por Confirmar" : "Pending"}
                                           </span>
                                         )}
                                       </td>
@@ -832,18 +838,18 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
 
                                     {isExpanded && (
                                       <tr>
-                                        <td colSpan={5} className="bg-slate-50/55 p-6 border-t border-b border-slate-100">
+                                        <td colSpan={6} className="bg-slate-50/55 p-6 border-t border-b border-slate-100">
                                           {session.status === "completed" ? (
                                             <div className="space-y-4 max-w-4xl font-sans text-xs sm:text-sm">
                                               <div className="flex justify-between items-center pb-2 border-b border-slate-200">
                                                 <div className="flex items-center gap-2">
                                                   <Bot className="h-4.5 w-4.5 text-[#E2B254]" />
                                                   <strong className="text-slate-800 text-xs uppercase tracking-wider font-extrabold">
-                                                    Reporte Académico Oficial Meridian
+                                                    {lang === "ES" ? "Reporte Académico Oficial Meridian" : "Official Meridian Academic Report"}
                                                   </strong>
                                                 </div>
                                                 <span className="text-[11px] text-slate-400 font-mono">
-                                                  Asesor: <strong>{session.tutorName}</strong>
+                                                  {lang === "ES" ? "Asesor:" : "Tutor:"} <strong>{session.tutorName}</strong>
                                                 </span>
                                               </div>
 
@@ -852,20 +858,20 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                                                   <>
                                                     <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-xs">
                                                       <span className="text-[10px] font-bold text-[#E2B254] block mb-2 uppercase tracking-wide">
-                                                        ✍ AVANCE PEDAGÓGICO REVISADO:
+                                                        {lang === "ES" ? "✍ AVANCE PEDAGÓGICO REVISADO:" : "✍ REVIEWED PEDAGOGICAL PROGRESS:"}
                                                       </span>
                                                       <p className="text-slate-600 leading-relaxed">{session.report.advances}</p>
                                                     </div>
                                                     <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-xs">
                                                       <span className="text-[10px] font-bold text-[#AE2024] block mb-2 uppercase tracking-wide">
-                                                        ⚿ ADVERTENCIAS & COMPROMISOS:
+                                                        {lang === "ES" ? "⚿ ADVERTENCIAS & COMPROMISOS:" : "⚿ WARNINGS & COMMITMENTS:"}
                                                       </span>
                                                       <p className="text-slate-600 leading-relaxed">{session.report.agreements}</p>
                                                     </div>
                                                   </>
                                                 ) : (
                                                   <div className="col-span-2 text-center py-4 text-slate-400 italic">
-                                                    No se han registrado anotaciones.
+                                                    {lang === "ES" ? "No se han registrado anotaciones." : "No notes have been registered."}
                                                   </div>
                                                 )}
                                               </div>
@@ -874,19 +880,19 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                                                 <button
                                                   onClick={(e) => {
                                                     e.stopPropagation();
-                                                    alert("Descargando PDF oficial de auditoría académica...");
+                                                    alert(lang === "ES" ? "Descargando PDF oficial de auditoría académica..." : "Downloading official academic audit PDF...");
                                                   }}
                                                   className="py-1.5 px-3 bg-[#0C122C] text-[#E2B254] hover:bg-[#E2B254] hover:text-[#0C122C] text-xs font-black rounded-lg border border-[#E2B254]/30 flex items-center gap-1.5 transition-all cursor-pointer"
                                                 >
                                                   <Download className="h-3.5 w-3.5" />
-                                                  Exportar Reporte PDF
+                                                  {lang === "ES" ? "Exportar Reporte PDF" : "Export PDF Report"}
                                                 </button>
                                               </div>
                                             </div>
                                           ) : (
                                             <div className="p-4 bg-amber-50/50 rounded-xl border border-amber-100 text-amber-900 leading-relaxed text-xs">
-                                              <strong className="block mb-1 text-xs">Protección de Horas Meridian:</strong>
-                                              Estas {session.duration} horas de clase están reservadas. Si el tutor no confirma o necesitas hacer un cambio, las horas regresan de forma automática a tu billetera para tu tranquilidad y control.
+                                              <strong className="block mb-1 text-xs">{lang === "ES" ? "Protección de Horas Meridian:" : "Meridian Hours Protection:"}</strong>
+                                              {lang === "ES" ? `Estas ${session.duration} horas de clase están reservadas. Si el tutor no confirma o necesitas hacer un cambio, las horas regresan de forma automática a tu billetera para tu tranquilidad y control.` : `These ${session.duration} class hours are reserved. If the tutor does not confirm or you need to make a change, the hours automatically return to your wallet for your peace of mind and control.`}
                                             </div>
                                           )}
                                         </td>
