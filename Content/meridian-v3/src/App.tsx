@@ -18,6 +18,7 @@ import UniversitiesShowcase from './components/UniversitiesShowcase';
 import AdvisorsSection from './components/AdvisorsSection';
 import AuthModal from './components/AuthModal';
 import Footer from './components/Footer';
+import WhatsAppButton from './components/WhatsAppButton';
 
 // TypeScript Types
 import { Language, Tutor } from './types';
@@ -225,6 +226,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
+      <WhatsAppButton />
     </div>
   );
 }
