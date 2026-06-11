@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from "react";
 import { auth } from "../firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Calendar as CalendarIcon,
@@ -109,10 +109,6 @@ const PROGRAMS_PLANS: ProgramPlan[] = [
   }
 ];
 
-interface StudentPortalProps {
-  language?: Language;
-}
-
 const BookingFormBlock = ({ programName, availableHours, optionsSubjects, optionsTutors, onSchedule, t }: any) => {
   const [subject, setSubject] = useState(optionsSubjects[0]);
   const [tutor, setTutor] = useState(optionsTutors[0].value);
@@ -152,7 +148,7 @@ const BookingFormBlock = ({ programName, availableHours, optionsSubjects, option
       <form onSubmit={handleSubmit} className="p-6 space-y-5 bg-white text-slate-700">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_subject}</label>
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_subject || "Materia"}</label>
             <select
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
@@ -164,7 +160,7 @@ const BookingFormBlock = ({ programName, availableHours, optionsSubjects, option
             </select>
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_mentor}</label>
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_mentor || "Asesor / Mentor"}</label>
             <select
               value={tutor}
               onChange={(e) => setTutor(e.target.value)}
@@ -179,15 +175,15 @@ const BookingFormBlock = ({ programName, availableHours, optionsSubjects, option
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_date}</label>
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_date || "Fecha"}</label>
             <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]" />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_time}</label>
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_time || "Hora"}</label>
             <input type="time" required value={time} onChange={(e) => setTime(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]" />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_duration}</label>
+            <label className="text-xs font-bold text-slate-500 uppercase">{t.portal_book_duration || "Duración"}</label>
             <select value={duration} onChange={(e) => setDuration(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E2B254]">
               <option value={1.0}>1.0 Hora</option>
               <option value={1.5}>1.5 Horas</option>
@@ -205,7 +201,7 @@ const BookingFormBlock = ({ programName, availableHours, optionsSubjects, option
             {success ? (
               <><span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" /> Confirmando...</>
             ) : (
-              <><CalendarDays className="h-4 w-4" /> {t.portal_book_btn}</>
+              <><CalendarDays className="h-4 w-4" /> {t.portal_book_btn || "Agendar Clase Ahora"}</>
             )}
           </button>
         </div>
@@ -213,6 +209,10 @@ const BookingFormBlock = ({ programName, availableHours, optionsSubjects, option
     </div>
   );
 };
+
+interface StudentPortalProps {
+  language?: Language;
+}
 
 export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
   const [lang, setLang] = useState<Language>(language);
@@ -227,6 +227,11 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
     });
     return () => unsubscribe();
   }, []);
+
+  // 3 Distinct Program Balances
+  const [ibHours, setIbHours] = useState(15.0);
+  const [satHours, setSatHours] = useState(10.0);
+  const [uniHours, setUniHours] = useState(5.0);
 
   // Dual-role simulation manager
   const [userRole, setUserRole] = useState<"student" | "tutor">("student");
@@ -358,23 +363,6 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
   const [advancesInput, setAdvancesInput] = useState("");
   const [agreementsInput, setAgreementsInput] = useState("");
   const [isGeneratingIA, setIsGeneratingIA] = useState(false);
-
-  // 3 Distinct Program Balances
-  const [ibHours, setIbHours] = useState(15.0);
-  const [satHours, setSatHours] = useState(10.0);
-  const [uniHours, setUniHours] = useState(5.0);
-
-  // Bundle pricing Form State
-  const [purchaseType, setPurchaseType] = useState<"ib" | "sat" | "university">("ib");
-  const [purchaseCurrency, setPurchaseCurrency] = useState<"USD" | "PEN">("PEN");
-  const [purchaseHours, setPurchaseHours] = useState<number>(6);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
-
-  // Calculates active hours remaining
-  const activePackage = packages.find((p) => p.id === "p_premium");
-  const totalHoursLeft = activePackage
-    ? activePackage.hoursTotal - activePackage.hoursUsed
-    : 4.5;
 
   const handleScheduleBlock = (data: any) => {
     let hasEnoughHours = false;
@@ -508,6 +496,50 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
 
       <div className="max-w-7xl mx-auto relative z-10 px-1">
         
+        {/* Dynamic Dual-Role Switch Toolbar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-[#0C122C]/90 p-4 rounded-2xl border border-white/5 shadow-xl">
+          <div className="flex items-center space-x-3">
+            <span className="p-2 bg-brand-gold/15 text-[#E2B254] rounded-xl animate-pulse">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            <div>
+              <span className="text-[10px] font-sans font-bold tracking-widest text-[#E2B254] block uppercase">
+                HERRAMIENTA INTEGRADORA DIGITAL
+              </span>
+              <h3 className="text-sm font-bold text-slate-100 font-sans">
+                {language === "ES"
+                  ? "Simulador de Roles de Mentoría"
+                  : "Mentoring Role Simulator"}
+              </h3>
+            </div>
+          </div>
+
+          <div className="inline-flex bg-[#070B19] p-1 rounded-xl border border-white/10 shrink-0">
+            <button
+              onClick={() => setUserRole("student")}
+              className={`px-4 py-2 rounded-lg text-xs font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                userRole === "student"
+                  ? "bg-[#E2B254] text-[#070B19] font-black shadow-md"
+                  : "text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              <Users className="h-3.5 w-3.5" />
+              Vista Alumno
+            </button>
+            <button
+              onClick={() => setUserRole("tutor")}
+              className={`px-4 py-2 rounded-lg text-xs font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                userRole === "tutor"
+                  ? "bg-[#AE2024] text-white font-black shadow-md"
+                  : "text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              <Bot className="h-3.5 w-3.5" />
+              Tutor / Admin
+            </button>
+          </div>
+        </div>
+
         {userRole === "student" ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#0c122c] h-auto min-h-[700px] items-stretch">
             
@@ -528,9 +560,9 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                   </div>
                   <button
                     onClick={() => setLang(lang === "ES" ? "EN" : "ES")}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded border border-white/20 text-xs font-bold text-slate-300 hover:text-white hover:border-[#E2B254] transition-all"
+                    className="px-2 py-1 bg-white/10 hover:bg-white/20 text-[#E2B254] rounded text-[10px] font-bold cursor-pointer transition-colors"
                   >
-                    {lang}
+                    {lang === "ES" ? "EN" : "ES"}
                   </button>
                 </div>
 
@@ -566,7 +598,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                     <CalendarDays
                       className={`h-4.5 w-4.5 ${studentTab === "agendar" ? "text-[#E2B254]" : "text-slate-400"}`}
                     />
-                    {t.portal_book_session}
+                    {t.portal_book_title}
                   </button>
 
                   <button
@@ -583,7 +615,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                     <ShoppingBag
                       className={`h-4.5 w-4.5 ${studentTab === "tienda" ? "text-[#E2B254]" : "text-slate-400"}`}
                     />
-                    {t.portal_buy_hours}
+                    {t.portal_store || "Tienda de Paquetes"}
                   </button>
 
                   <button
@@ -600,7 +632,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                     <FileText
                       className={`h-4.5 w-4.5 ${studentTab === "recursos" ? "text-[#E2B254]" : "text-slate-400"}`}
                     />
-                    {t.portal_materials}
+                    {t.portal_resources || "Banco de Recursos"}
                   </button>
                 </div>
               </div>
@@ -623,17 +655,13 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                 <button
                   type="button"
                   onClick={async () => {
-                    try {
-                      await signOut(auth);
-                      window.location.href = '/';
-                    } catch (error) {
-                      console.error('Error signing out', error);
-                    }
+                    await signOut(auth);
+                    window.location.href = "/";
                   }}
                   className="w-full flex items-center gap-2 py-2.5 px-4 font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all text-xs cursor-pointer"
                 >
                   <LogOut className="h-4 w-4 text-slate-400" />
-                  {t.portal_logout}
+                  {t.portal_logout || "Cerrar Sesión"}
                 </button>
               </div>
             </div>
@@ -658,53 +686,18 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                         </p>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 sm:gap-4 justify-end">
-                        {/* Counter 1: Tutorías IB */}
-                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
-                          <div className="text-right">
-                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
-                              Tutorías IB
-                            </span>
-                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
-                              {totalHoursLeft.toFixed(1)}{" "}
-                              <span className="text-xs font-bold text-slate-500">Hrs</span>
-                            </span>
-                          </div>
-                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
-                            <Clock className="h-4 w-4" />
-                          </div>
+                      <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4 shrink-0 hover:border-[#E2B254]/45 transition-all group">
+                        <div className="text-right">
+                          <span className="text-[10px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
+                            SALDO RESTANTE
+                          </span>
+                          <span className="text-2xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
+                            {totalHoursLeft.toFixed(1)}{" "}
+                            <span className="text-sm font-bold text-slate-500">Hrs</span>
+                          </span>
                         </div>
-
-                        {/* Counter 2: Prep SAT */}
-                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
-                          <div className="text-right">
-                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
-                              Prep SAT
-                            </span>
-                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
-                              0.0{" "}
-                              <span className="text-xs font-bold text-slate-500">Hrs</span>
-                            </span>
-                          </div>
-                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
-                            <Clock className="h-4 w-4" />
-                          </div>
-                        </div>
-
-                        {/* Counter 3: Asesorías Univ. */}
-                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
-                          <div className="text-right">
-                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
-                              Asesorías Univ.
-                            </span>
-                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
-                              0.0{" "}
-                              <span className="text-xs font-bold text-slate-500">Hrs</span>
-                            </span>
-                          </div>
-                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
-                            <Clock className="h-4 w-4" />
-                          </div>
+                        <div className="p-2 bg-amber-50 rounded-xl text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
+                          <Clock className="h-6 w-6 animate-pulse" />
                         </div>
                       </div>
                     </div>
@@ -719,7 +712,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                               : "text-slate-600 hover:text-slate-950"
                           }`}
                         >
-                          {t.portal_all} ({sessions.length})
+                          Todas ({sessions.length})
                         </button>
                         <button
                           onClick={() => setFilterStatus("pending_confirmation")}
@@ -729,7 +722,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                               : "text-slate-600 hover:text-slate-950"
                           }`}
                         >
-                          {t.portal_pending} (
+                          Por Confirmar (
                           {sessions.filter((s) => s.status === "pending_confirmation").length}
                           )
                         </button>
@@ -741,7 +734,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                               : "text-slate-600 hover:text-slate-950"
                           }`}
                         >
-                          {t.portal_confirmed} (
+                          Confirmadas (
                           {sessions.filter((s) => s.status === "scheduled").length}
                           )
                         </button>
@@ -753,7 +746,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                               : "text-slate-600 hover:text-slate-950"
                           }`}
                         >
-                          {t.portal_completed} (
+                          Completadas (
                           {sessions.filter((s) => s.status === "completed").length}
                           )
                         </button>
@@ -769,11 +762,10 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                         <table className="w-full text-left border-collapse font-sans text-xs sm:text-sm">
                           <thead>
                             <tr className="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">
-                              <th className="py-4 px-6">{t.portal_date_time}</th>
-                              <th className="py-4 px-6">{t.portal_subject}</th>
-                              <th className="py-4 px-6">{t.portal_program}</th>
-                              <th className="py-4 px-6">{t.portal_duration}</th>
-                              <th className="py-4 px-6">{t.portal_status}</th>
+                              <th className="py-4 px-6">Fecha y Hora</th>
+                              <th className="py-4 px-6">Materia / Tema</th>
+                              <th className="py-4 px-6">Duración</th>
+                              <th className="py-4 px-6">Estado</th>
                               <th className="py-4 px-6 text-center w-12">Detalles</th>
                             </tr>
                           </thead>
@@ -811,9 +803,6 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                                             ? "Sesión Confirmada"
                                             : "Falta Confirmación del Profesor"}
                                         </div>
-                                      </td>
-                                      <td className="py-4 px-6 font-medium text-slate-600 text-[11px]">
-                                        Tutorías IB
                                       </td>
                                       <td className="py-4 px-6 font-semibold font-mono text-[#E2B254]">
                                         {session.duration.toFixed(1)} Hrs
@@ -920,40 +909,40 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
                       <div className="space-y-1">
                         <h2 className="text-2xl sm:text-3xl font-sans font-black text-slate-900 tracking-tight leading-none">
-                          {t.portal_book_title}
+                          Agendar Nueva Sesión
                         </h2>
                         <p className="text-xs sm:text-sm text-slate-500 font-sans font-medium">
-                          {t.portal_book_subtitle}
+                          Coordina tu clase con la plana de mentores asignados.
                         </p>
                       </div>
+                      
                     </div>
-
-                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
-                      <BookingFormBlock
-                        t={t}
-                        programName="Tutorías Especializadas IB"
-                        availableHours={ibHours}
-                        optionsSubjects={["IB Physics HL", "IB Math AA HL", "Ensayo - TdC (Teoría del Conocimiento)", "Monografía - Extended Essay"]}
-                        optionsTutors={[{label: "Adrian Pastor (Física / Monografías)", value: "Adrian Pastor"}, {label: "Sofía Ruíz (Math AA / Ensayos)", value: "Sofía Ruíz"}]}
-                        onSchedule={handleScheduleBlock}
-                      />
-                      <BookingFormBlock
-                        t={t}
-                        programName="Preparación SAT Digital"
-                        availableHours={satHours}
-                        optionsSubjects={["SAT Math", "SAT Reading & Writing", "SAT Full Practice Test"]}
-                        optionsTutors={[{label: "Adrian Pastor (Math)", value: "Adrian Pastor"}, {label: "Esteban Montalván (Reading)", value: "Esteban Montalván"}]}
-                        onSchedule={handleScheduleBlock}
-                      />
-                      <BookingFormBlock
-                        t={t}
-                        programName="Asesorías Universitarias Premium"
-                        availableHours={uniHours}
-                        optionsSubjects={["Profile Architecture", "Personal Statement", "Creative Writing", "Interview Prep"]}
-                        optionsTutors={[{label: "Esteban Montalván (Profile Engineer)", value: "Esteban Montalván"}]}
-                        onSchedule={handleScheduleBlock}
-                      />
-                    </div>
+                    <div className="space-y-8">
+                        <BookingFormBlock
+                          programName="Tutorías Especializadas IB"
+                          availableHours={ibHours}
+                          optionsSubjects={["IB Physics HL", "IB Math AA HL", "Ensayo - TdC", "Monografía - Extended Essay"]}
+                          optionsTutors={[{ label: "Adrian Pastor (Física / Monografías)", value: "Adrian Pastor" }, { label: "Sofía Ruíz (Math AA / Ensayos)", value: "Sofía Ruíz" }]}
+                          onSchedule={handleScheduleBlock}
+                          t={t}
+                        />
+                        <BookingFormBlock
+                          programName="Preparación SAT Digital"
+                          availableHours={satHours}
+                          optionsSubjects={["SAT Math", "SAT Reading & Writing", "Simulacro Completo"]}
+                          optionsTutors={[{ label: "Adrian Pastor (Math)", value: "Adrian Pastor" }, { label: "Sofía Ruíz (Reading)", value: "Sofía Ruíz" }]}
+                          onSchedule={handleScheduleBlock}
+                          t={t}
+                        />
+                        <BookingFormBlock
+                          programName="Asesorías Universitarias Premium"
+                          availableHours={uniHours}
+                          optionsSubjects={["Common App Essay", "Personal Statement", "Entrevista", "Extracurriculares"]}
+                          optionsTutors={[{ label: "Adrian Pastor", value: "Adrian Pastor" }]}
+                          onSchedule={handleScheduleBlock}
+                          t={t}
+                        />
+                      </div>
                   </div>
                 )}
 
@@ -970,53 +959,13 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                         </p>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 sm:gap-4 justify-end">
-                        {/* Counter 1: Tutorías IB */}
-                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
-                          <div className="text-right">
-                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
-                              Tutorías IB
-                            </span>
-                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
-                              {totalHoursLeft.toFixed(1)}{" "}
-                              <span className="text-xs font-bold text-slate-500">Hrs</span>
-                            </span>
-                          </div>
-                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
-                            <Clock className="h-4 w-4" />
-                          </div>
+                      <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200/60 shadow-sm flex items-center gap-4 shrink-0">
+                        <div className="text-right">
+                          <span className="text-[10px] text-slate-400 block pb-0.5">SALDO DISPONIBLE</span>
+                          <span className="text-2xl font-sans font-black text-slate-900">{totalHoursLeft.toFixed(1)} Hrs</span>
                         </div>
-
-                        {/* Counter 2: Prep SAT */}
-                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
-                          <div className="text-right">
-                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
-                              Prep SAT
-                            </span>
-                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
-                              0.0{" "}
-                              <span className="text-xs font-bold text-slate-500">Hrs</span>
-                            </span>
-                          </div>
-                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
-                            <Clock className="h-4 w-4" />
-                          </div>
-                        </div>
-
-                        {/* Counter 3: Asesorías Univ. */}
-                        <div className="bg-white px-3 py-2 rounded-xl border border-slate-200/60 shadow-sm flex items-center gap-3 shrink-0 hover:border-[#E2B254]/45 transition-all group">
-                          <div className="text-right">
-                            <span className="text-[9px] font-sans font-bold text-slate-400 tracking-widest block mb-0.5 uppercase">
-                              Asesorías Univ.
-                            </span>
-                            <span className="text-xl font-sans font-black text-slate-900 tracking-tight group-hover:text-[#E2B254] transition-colors">
-                              0.0{" "}
-                              <span className="text-xs font-bold text-slate-500">Hrs</span>
-                            </span>
-                          </div>
-                          <div className="p-1.5 bg-amber-50 rounded-lg text-[#E2B254] border border-[#E2B254]/20 group-hover:scale-105 transition-transform duration-300">
-                            <Clock className="h-4 w-4" />
-                          </div>
+                        <div className="p-2 bg-amber-50 rounded-xl text-[#E2B254]">
+                          <Clock className="h-6 w-6" />
                         </div>
                       </div>
                     </div>
