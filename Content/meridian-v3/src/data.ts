@@ -442,6 +442,7 @@ export const DICTIONARY = {
     about_mission_badge: 'Transcribiendo Rigor Integral',
     about_vision_badge: 'Formando Líderes del Futuro',
 
+    stats_tip_label: 'Consejo',
     stats_audited_desc: 'Resultados auditados. Tu admisión no es obra del azar; es la consecuencia de una arquitectura de perfil impecable.',
     stats_proven_badge: 'EFICACIA COMPROBADA',
     stats_effect_title: 'El Efecto Avanzado de Meridian',
@@ -567,6 +568,7 @@ export const DICTIONARY = {
     about_mission_badge: 'Transcribing Integral Rigor',
     about_vision_badge: 'Shaping Future Leaders',
 
+    stats_tip_label: 'Tip',
     stats_audited_desc: 'Audited results. Your admission is not a matter of chance; it is the result of an impeccable profile architecture.',
     stats_proven_badge: 'PROVEN EFFICACY',
     stats_effect_title: 'The Meridian Advanced Effect',

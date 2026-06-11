@@ -94,7 +94,7 @@ export default function StatsSection({ language }: StatsSectionProps) {
                   <motion.div
                     key={card.id}
                     whileHover={{ y: -4 }}
-                    className="p-6 rounded-2xl bg-[#151F47]/20 border border-white/5 shadow-sm relative overflow-hidden flex flex-col justify-between h-44"
+                    className="p-6 rounded-2xl bg-[#151F47]/20 border border-white/5 shadow-sm relative flex flex-col justify-between h-full"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <span className="text-3xl sm:text-4xl font-sans font-black text-[#E2B254]">
@@ -105,8 +105,8 @@ export default function StatsSection({ language }: StatsSectionProps) {
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-white mb-1">{card.label}</h4>
-                      <p className="text-xs text-slate-400 leading-relaxed">{card.sub}</p>
+                      <h4 className="text-sm font-bold text-white mb-1 leading-snug">{card.label}</h4>
+                      <p className="text-xs text-slate-400 leading-relaxed break-words">{card.sub}</p>
                     </div>
                   </motion.div>
                 );
@@ -191,8 +191,8 @@ export default function StatsSection({ language }: StatsSectionProps) {
             {/* Admission rates explanation based on the active selection */}
             <div className="mt-8 pt-4 border-t border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="text-xs text-slate-350 leading-relaxed max-w-xl">
-                <span className="text-[#E2B254] font-bold">Tip: </span> 
-                {currentUni.description}
+                <span className="text-[#E2B254] font-bold">{t.stats_tip_label}: </span> 
+                {language === 'EN' ? currentUni.description_en : currentUni.description}
               </div>
               <div className="text-xs bg-[#AE2024]/10 border border-[#AE2024]/30 px-3 py-1.5 rounded-xl text-[#E2B254] font-extrabold shrink-0">
                 {t.stats_offers_label}: {currentUni.meridianOffers}
