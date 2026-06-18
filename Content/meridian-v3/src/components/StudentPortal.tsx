@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { Language, ClassPackage, Session, Materials } from "../types";
 import { DICTIONARY, REFRENCES_MATERIALS } from "../data";
+import AnimatedLogo from './AnimatedLogo';
 
 interface ProgramPlan {
   id: "ib" | "sat" | "university";
@@ -212,9 +213,10 @@ const BookingFormBlock = ({ programName, availableHours, optionsSubjects, option
 
 interface StudentPortalProps {
   language?: Language;
+  forcedRole?: "student" | "admin";
 }
 
-export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
+export default function StudentPortal({ language = "ES", forcedRole = "student" }: StudentPortalProps) {
   const [lang, setLang] = useState<Language>(language);
   const t = DICTIONARY[lang] || DICTIONARY["ES"];
 
@@ -241,8 +243,8 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
   const [purchaseHours, setPurchaseHours] = useState<number>(6);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  // Dual-role simulation manager
-  const [userRole, setUserRole] = useState<"student" | "tutor">("student");
+  // Role state based on prop
+  const [userRole, setUserRole] = useState<"student" | "tutor">(forcedRole === "admin" ? "tutor" : "student");
 
   // Active Sidebar Sub-Tab for Student Mode
   const [studentTab, setStudentTab] = useState<
@@ -398,7 +400,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
       duration: data.duration,
       status: "pending_confirmation",
       report: null,
-      packageId: "p_custom",
+      packageId: data.programName,
     };
 
     setSessions([newSession, ...sessions]);
@@ -519,28 +521,10 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
           </div>
 
           <div className="inline-flex bg-[#070B19] p-1 rounded-xl border border-white/10 shrink-0">
-            <button
-              onClick={() => setUserRole("student")}
-              className={`px-4 py-2 rounded-lg text-xs font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                userRole === "student"
-                  ? "bg-[#E2B254] text-[#070B19] font-black shadow-md"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
+            <span className="px-4 py-2 rounded-lg text-xs font-sans font-bold flex items-center gap-1.5 transition-all bg-[#E2B254] text-[#070B19] shadow-md">
               <Users className="h-3.5 w-3.5" />
-              Vista Alumno
-            </button>
-            <button
-              onClick={() => setUserRole("tutor")}
-              className={`px-4 py-2 rounded-lg text-xs font-sans font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                userRole === "tutor"
-                  ? "bg-[#AE2024] text-white font-black shadow-md"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              <Bot className="h-3.5 w-3.5" />
-              Tutor / Admin
-            </button>
+              {userRole === "student" ? "Vista Alumno" : "Vista Administrador"}
+            </span>
           </div>
         </div>
 
@@ -555,9 +539,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
               <div className="space-y-10">
                 <div className="flex items-center justify-between pb-6 border-b border-white/5">
                   <div className="flex items-center space-x-3">
-                    <div className="h-8 w-8 bg-[#E2B254] rounded-lg shadow-md flex items-center justify-center text-[#070B19] font-sans font-black text-sm">
-                      M
-                    </div>
+                    <AnimatedLogo size={32} />
                     <span className="text-base font-sans font-black tracking-[0.25em] text-[#E2B254] uppercase">
                       MERIDIAN
                     </span>
@@ -1321,7 +1303,7 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-white/5">
+                  <div className="mt-6 pt-4 border-t border-white/5 space-y-3">
                     <button
                       onClick={() => {
                         const nextSch = sessions.find((s) => s.status === "scheduled");
@@ -1337,6 +1319,13 @@ export default function StudentPortal({ language = "ES" }: StudentPortalProps) {
                     >
                       <Bot className="h-4 w-4" />
                       Redactar Reporte Familiar con Soporte IA
+                    </button>
+                    <button
+                      onClick={() => alert("Historial de paquetes: \n- Paquete Premium: 5.5 Hrs utilizadas\n- Paquete Inicial: 6 Hrs utilizadas")}
+                      className="w-full py-2.5 bg-[#0C122C] border border-[#E2B254]/30 text-[#E2B254] hover:bg-[#E2B254] hover:text-[#0C122C] rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer font-sans"
+                    >
+                      <Clock className="h-4 w-4" />
+                      Ver paquetes y horas utilizadas
                     </button>
                   </div>
                 </div>
