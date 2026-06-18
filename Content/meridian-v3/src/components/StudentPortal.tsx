@@ -373,6 +373,7 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
   const [advancesInput, setAdvancesInput] = useState("");
   const [agreementsInput, setAgreementsInput] = useState("");
   const [isGeneratingIA, setIsGeneratingIA] = useState(false);
+  const [showPackagesHistoryModal, setShowPackagesHistoryModal] = useState(false);
 
   const handleScheduleBlock = (data: any) => {
     let hasEnoughHours = false;
@@ -1321,7 +1322,7 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
                       Redactar Reporte Familiar con Soporte IA
                     </button>
                     <button
-                      onClick={() => alert("Historial de paquetes: \n- Paquete Premium: 5.5 Hrs utilizadas\n- Paquete Inicial: 6 Hrs utilizadas")}
+                      onClick={() => setShowPackagesHistoryModal(true)}
                       className="w-full py-2.5 bg-[#0C122C] border border-[#E2B254]/30 text-[#E2B254] hover:bg-[#E2B254] hover:text-[#0C122C] rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 cursor-pointer font-sans"
                     >
                       <Clock className="h-4 w-4" />
@@ -1491,6 +1492,115 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
                   <Check className="h-4 w-4" />
                   Emitir y Guardar Reporte Familiar
                 </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* PACKAGES HISTORY MODAL */}
+      <AnimatePresence>
+        {showPackagesHistoryModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4 font-sans">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowPackagesHistoryModal(false)}
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
+            />
+
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 15 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 15 }}
+              className="bg-white rounded-3xl p-6 sm:p-8 max-w-4xl w-full relative z-10 shadow-2xl overflow-y-auto max-h-[90vh]"
+            >
+              <div className="flex justify-between items-start mb-6">
+                <div className="w-full text-center space-y-1">
+                  <h2 className="text-3xl font-black text-[#0C122C] tracking-tight">Registro de Sesiones</h2>
+                  <p className="text-slate-500 text-sm">Diego Hernández — Progreso y Control de Paquetes</p>
+                </div>
+                <button onClick={() => setShowPackagesHistoryModal(false)} className="absolute top-6 right-6 p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-500 transition-colors cursor-pointer">
+                  ✕
+                </button>
+              </div>
+
+              <div className="bg-[#10b981] rounded-2xl p-6 text-center text-white shadow-lg mb-8">
+                <div className="text-xs font-bold uppercase tracking-widest opacity-90 mb-1">INGRESOS TOTALES REGISTRADOS</div>
+                <div className="text-5xl font-black">{packages.reduce((acc, pkg) => acc + pkg.pricePEN, 0).toFixed(2)} Soles</div>
+              </div>
+
+              <div className="space-y-6">
+                {packages.map((pkg, idx) => {
+                  const pkgSessions = sessions.filter(s => s.packageId === pkg.id);
+                  const borderColors = ['border-red-500', 'border-blue-500', 'border-emerald-500', 'border-amber-500'];
+                  const borderColor = borderColors[idx % borderColors.length];
+                  
+                  return (
+                    <div key={pkg.id} className={`bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex`}>
+                      <div className={`w-1.5 shrink-0 bg-white border-l-4 ${borderColor} rounded-l-2xl`}></div>
+                      
+                      <div className="p-6 w-full">
+                        <div className="flex justify-between items-start mb-6">
+                          <div>
+                            <h3 className="text-xl font-black text-[#0C122C] flex items-center gap-2">
+                              {pkg.name} <span className="text-[#6366f1] text-base font-bold">(S/. {pkg.pricePEN.toFixed(2)})</span>
+                            </h3>
+                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">{pkg.modalidad}</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="w-5 h-5 bg-[#10b981] rounded flex items-center justify-center text-white shadow-sm">
+                              <Check className="w-3.5 h-3.5 stroke-[3]" />
+                            </div>
+                            <div className="flex items-center gap-1.5 text-sm font-bold text-slate-700">
+                              <span className="w-3 h-3 rounded-full bg-[#8b5cf6]"></span>
+                              {Math.floor(pkg.hoursUsed)}h {Math.round((pkg.hoursUsed % 1) * 60)}m
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left text-xs">
+                            <thead>
+                              <tr className="border-b border-slate-100 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                                <th className="py-3 px-2">ACTIVIDAD</th>
+                                <th className="py-3 px-2 text-center">IA</th>
+                                <th className="py-3 px-2">FECHA</th>
+                                <th className="py-3 px-2">HORARIO</th>
+                                <th className="py-3 px-2 text-right">DURACIÓN</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-50">
+                              {pkgSessions.map(session => (
+                                <tr key={session.id} className="text-sm font-bold text-slate-700">
+                                  <td className="py-4 px-2">{session.subject}</td>
+                                  <td className="py-4 px-2 text-center">
+                                    {session.report ? (
+                                      <div className="inline-flex bg-[#fbbf24] p-1.5 rounded-lg text-white shadow-sm">
+                                        <Bot className="w-4 h-4" />
+                                      </div>
+                                    ) : <span className="text-slate-300">-</span>}
+                                  </td>
+                                  <td className="py-4 px-2">{session.date}</td>
+                                  <td className="py-4 px-2 text-slate-500 font-medium">{session.time}</td>
+                                  <td className="py-4 px-2 text-right text-slate-600">
+                                    {Math.floor(session.duration)} h {Math.round((session.duration % 1) * 60)} min
+                                  </td>
+                                </tr>
+                              ))}
+                              {pkgSessions.length === 0 && (
+                                <tr>
+                                  <td colSpan={5} className="py-6 text-center text-slate-400 font-normal">No hay sesiones registradas en este paquete.</td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </motion.div>
           </div>
