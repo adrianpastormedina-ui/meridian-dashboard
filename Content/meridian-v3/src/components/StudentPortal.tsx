@@ -1179,15 +1179,15 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
                             {(() => {
                               const waPhone = "51987593657";
                               const waMessage = 
-`¡Hola, Meridian! 👋 Soy estudiante y me encuentro interesado/a en adquirir el siguiente paquete de asesorías:
+`¡Hola, Meridian! Soy estudiante y me encuentro interesado/a en adquirir el siguiente paquete de asesorías:
 
-📚 *Programa:* ${activeProgram.name}
-⏱️ *Horas solicitadas:* ${purchaseHours} horas
-💰 *Precio referencial:* ${priceSymbol} ${priceToPay.toFixed(0)} ${purchaseCurrency}${activePkg.discountPercent > 0 ? ` *(incluye ${activePkg.discountPercent}% de descuento por volumen)*` : ""}
+*Programa:* ${activeProgram.name}
+*Horas solicitadas:* ${purchaseHours} horas
+*Precio referencial:* ${priceSymbol} ${priceToPay.toFixed(0)} ${purchaseCurrency}${activePkg.discountPercent > 0 ? ` *(incluye ${activePkg.discountPercent}% de descuento por volumen)*` : ""}
 
 Me gustaría confirmar la disponibilidad, coordinar el proceso de pago y comenzar lo antes posible.
 
-¡Quedo a la espera de su respuesta! 🎓`;
+¡Quedo a la espera de su respuesta!`;
                               const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
 
                               return (
