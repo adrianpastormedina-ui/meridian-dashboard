@@ -163,14 +163,29 @@ export default function Header({
 
         {/* Mobile Hamburger Toggle */}
         <div className="flex md:hidden items-center space-x-3">
-          {/* Quick Lang Switch */}
-          <button
-            onClick={() => setLanguage(language === 'ES' ? 'EN' : 'ES')}
-            className="p-2 text-brand-gold hover:bg-white/5 rounded-lg flex items-center gap-1 border border-white/10"
-          >
-            <Globe className="h-4 w-4" />
-            <span className="text-xs font-mono font-bold">{language}</span>
-          </button>
+          {/* Dual Lang Switch for Mobile */}
+          <div className="flex bg-[#0C122C] rounded-full p-0.5 border border-white/10" id="lang-selector-mobile">
+            <button
+              onClick={() => setLanguage('ES')}
+              className={`px-2 py-1 rounded-full text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                language === 'ES' 
+                  ? 'bg-brand-gold text-brand-dark shadow-md font-extrabold' 
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              ES
+            </button>
+            <button
+              onClick={() => setLanguage('EN')}
+              className={`px-2 py-1 rounded-full text-[10px] font-mono font-bold transition-all cursor-pointer ${
+                language === 'EN' 
+                  ? 'bg-brand-gold text-brand-dark shadow-md font-extrabold' 
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              EN
+            </button>
+          </div>
           
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

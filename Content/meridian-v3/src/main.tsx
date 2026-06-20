@@ -8,6 +8,8 @@ const path = window.location.pathname;
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {path.endsWith('student.html') || path.endsWith('/student') ? <StudentPortal language="ES" /> : <App />}
+    {path.endsWith('student.html') || path.endsWith('/student') ? <StudentPortal language="ES" forcedRole="student" /> : 
+     path.endsWith('admin.html') || path.endsWith('/admin') ? <StudentPortal language="ES" forcedRole="admin" /> : 
+     <App />}
   </StrictMode>,
 );
