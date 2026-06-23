@@ -112,6 +112,9 @@ export default function AuthModal({ isOpen, onClose, language }: AuthModalProps)
         email: email,
         role: role,
         createdAt: new Date().toISOString(),
+        ibHours: 0,
+        satHours: 0,
+        uniHours: 0,
         remainingHours: 0
       });
       await getRoleAndRedirect(cred.user.uid, email);

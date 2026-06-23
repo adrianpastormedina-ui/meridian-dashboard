@@ -4,8 +4,9 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { auth } from "../firebase";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "../firebase";
+import { signOut, onAuthStateChanged, User } from "firebase/auth";
+import { doc, onSnapshot, collection, query, orderBy, setDoc } from "firebase/firestore";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Calendar as CalendarIcon,
@@ -220,20 +221,71 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
   const [lang, setLang] = useState<Language>(language);
   const t = DICTIONARY[lang] || DICTIONARY["ES"];
 
-  // Auth protection check
+  // Auth user and Firestore profile
+  const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<{ name: string; email: string; role: string } | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  // Auth protection + real-time profile from Firestore
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.href = '/';
+        return;
       }
+      setFirebaseUser(user);
+
+      // Listen to user profile doc in real time
+      const profileRef = doc(db, 'users', user.uid);
+      const unsubProfile = onSnapshot(profileRef, async (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
+          setUserProfile({ name: data.name || user.displayName || user.email || 'Estudiante', email: data.email || user.email || '', role: data.role || 'student' });
+          setIbHours(typeof data.ibHours === 'number' ? data.ibHours : 0);
+          setSatHours(typeof data.satHours === 'number' ? data.satHours : 0);
+          setUniHours(typeof data.uniHours === 'number' ? data.uniHours : 0);
+        } else {
+          // First time: create profile doc with 0 hours
+          const name = user.displayName || user.email || 'Estudiante';
+          await setDoc(profileRef, {
+            uid: user.uid,
+            name,
+            email: user.email || '',
+            role: 'student',
+            ibHours: 0,
+            satHours: 0,
+            uniHours: 0,
+            createdAt: new Date().toISOString(),
+          });
+          setUserProfile({ name, email: user.email || '', role: 'student' });
+          setIbHours(0);
+          setSatHours(0);
+          setUniHours(0);
+        }
+        setLoadingProfile(false);
+      });
+
+      return unsubProfile;
     });
-    return () => unsubscribe();
+    return () => unsubAuth();
   }, []);
 
-  // 3 Distinct Program Balances
-  const [ibHours, setIbHours] = useState(15.0);
-  const [satHours, setSatHours] = useState(10.0);
-  const [uniHours, setUniHours] = useState(5.0);
+  // Real-time sessions from Firestore subcollection
+  useEffect(() => {
+    if (!firebaseUser) return;
+    const sessionsRef = collection(db, 'users', firebaseUser.uid, 'sessions');
+    const q = query(sessionsRef, orderBy('createdAt', 'desc'));
+    const unsubSessions = onSnapshot(q, (snap) => {
+      const loaded: Session[] = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Session));
+      setSessions(loaded);
+    });
+    return () => unsubSessions();
+  }, [firebaseUser]);
+
+  // 3 Distinct Program Balances — initialized at 0, updated from Firestore
+  const [ibHours, setIbHours] = useState(0);
+  const [satHours, setSatHours] = useState(0);
+  const [uniHours, setUniHours] = useState(0);
 
   const totalHoursLeft = ibHours + satHours + uniHours;
 
@@ -257,113 +309,11 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
   // Expanded Session Accordion state for past reports
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
 
-  // Core interactive states seeded to match database models on load
-  const [sessions, setSessions] = useState<Session[]>([
-    {
-      id: "pending-1",
-      date: "18 JUN 2026",
-      time: "08:08",
-      subject: "IB Physics HL",
-      tutorName: "Adrian Pastor",
-      duration: 1.5,
-      status: "pending_confirmation",
-      report: null,
-      packageId: "p_premium",
-    },
-    {
-      id: "pending-2",
-      date: "12 JUN 2026",
-      time: "02:32",
-      subject: "IB Math AA HL",
-      tutorName: "Sofía Ruíz",
-      duration: 2.0,
-      status: "scheduled",
-      report: null,
-      packageId: "p_premium",
-    },
-    {
-      id: "pending-3",
-      date: "11 JUN 2026",
-      time: "16:35",
-      subject: "IB Math AA HL",
-      tutorName: "Sofía Ruíz",
-      duration: 1.0,
-      status: "pending_confirmation",
-      report: null,
-      packageId: "p_premium",
-    },
-    {
-      id: "past-1",
-      date: "09 JUN 2026",
-      time: "17:30",
-      subject: "Ensayo - TdC (Teoría del Conocimiento)",
-      tutorName: "Sofía Ruíz",
-      duration: 1.0,
-      status: "completed",
-      packageId: "p_premium",
-      report: {
-        advances:
-          "Alineamos los avances de la sesión estructurando la Teoría del Conocimiento: analizamos la formulación de preguntas de conocimiento basadas en la física cuántica, contrastando marcos de racionalidad científica.",
-        agreements:
-          "Diego redactará un borrador de 400 palabras centrado en la perspectiva contra-analítica, usando autores sugeridos el fin de semana.",
-      },
-    },
-    {
-      id: "past-2",
-      date: "08 JUN 2026",
-      time: "21:20",
-      subject: "Redacción de Monografía de Física HL",
-      tutorName: "Adrian Pastor",
-      duration: 1.5,
-      status: "completed",
-      packageId: "p_premium",
-      report: {
-        advances:
-          "Alineamos los avances de la medición del experimento LC de electromagnetismo: revisamos el cálculo matemático de incertidumbres porcentuales acumuladas.",
-        agreements:
-          "Diego completará la tabulación de datos residuales y corregirá el marco empírico.",
-      },
-    },
-    {
-      id: "past-3",
-      date: "07 JUN 2026",
-      time: "19:30",
-      subject: "Interno de Historia: Revolución Industrial",
-      tutorName: "Sofía Ruíz",
-      duration: 1.0,
-      status: "completed",
-      packageId: "p_past",
-      report: {
-        advances:
-          "Diego presentó su propuesta de fuentes primarias para la evaluación crítica de impacto socioeconómico.",
-        agreements:
-          "Redactar por completo la sección B (Investigación Académica) contrastando la postura de Hobsbawm.",
-      },
-    },
-  ]);
+  // Sessions — loaded from Firestore in real time (starts empty for new students)
+  const [sessions, setSessions] = useState<Session[]>([]);
 
-  const [packages, setPackages] = useState<ClassPackage[]>([
-    {
-      id: "p_premium",
-      name: "Paquete de Consultoría de Élite (Premium Plan)",
-      modalidad: "MODALIDAD: EXCLUSIVA INDIVIDUAL",
-      hoursTotal: 10.0,
-      hoursUsed: 5.5,
-      pricePEN: 2850,
-      priceUSD: 750,
-      status: "active",
-    },
-    {
-      id: "p_past",
-      name: "Paquete Inicial de Nivelación Académica",
-      modalidad: "MODALIDAD: TRABAJOS & ADAPTACIÓN",
-      hoursTotal: 6.0,
-      hoursUsed: 6.0,
-      pricePEN: 1850,
-      priceUSD: 500,
-      status: "completed",
-    },
-  ]);
+  // Packages — not hardcoded, derived from sessions for display
+  const [packages] = useState<ClassPackage[]>([]);
 
   // Materials hub
   const [materials] = useState<Materials[]>(REFRENCES_MATERIALS);
@@ -492,6 +442,17 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
     if (filterStatus === "all") return true;
     return s.status === filterStatus;
   });
+
+  if (loadingProfile) {
+    return (
+      <section className="py-20 bg-[#070B19] flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <span className="w-10 h-10 border-4 border-[#E2B254] border-t-transparent rounded-full animate-spin" />
+          <p className="text-slate-400 text-sm font-sans">Cargando tu perfil academico...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -627,14 +588,14 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
               <div className="mt-12 pt-6 border-t border-white/5 space-y-4 font-sans">
                 <div className="flex items-center gap-3">
                   <div className="w-11 h-11 rounded-full shrink-0 flex items-center justify-center bg-gradient-to-br from-[#E2B254] to-amber-500 text-white font-sans font-black text-sm border border-white/10">
-                    DH
+                    {userProfile ? userProfile.name.split(' ').map((w: string) => w[0]).slice(0,2).join('').toUpperCase() : '...'}
                   </div>
                   <div>
                     <h4 className="text-xs sm:text-sm font-bold text-white leading-tight">
-                      Diego Hernández
+                      {userProfile ? userProfile.name : 'Cargando...'}
                     </h4>
                     <span className="text-[10px] text-[#E2B254] tracking-wide font-extrabold uppercase">
-                      Premium Plan
+                      Estudiante Meridian
                     </span>
                   </div>
                 </div>
@@ -772,7 +733,7 @@ export default function StudentPortal({ language = "ES", forcedRole = "student" 
                       </div>
 
                       <div className="text-[11px] font-sans font-semibold text-slate-400">
-                        Diego Hernández · Lincoln High
+                        {userProfile ? userProfile.name : ''}
                       </div>
                     </div>
 
